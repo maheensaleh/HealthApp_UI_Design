@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
   TextView audiofilename;
   private Uri audiofile_uri;
   private MediaPlayer mediaPlayer;
-  private Boolean play_status=false;
+  private Boolean play_stop_status=false;
+  private Boolean play_pause_status=false;
   //record or select - play- stop - test
 
   @Override
@@ -46,20 +47,30 @@ public class MainActivity extends AppCompatActivity {
 
   public void play_audio(View view) throws IOException {
 
-    if (play_status==false) {
+    if (play_stop_status==false) { //playing
       mediaPlayer = new MediaPlayer();
       mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
       mediaPlayer.setDataSource(getApplicationContext(), audiofile_uri);
       mediaPlayer.prepare();
       mediaPlayer.start();
-      play_status=true;
+      play_stop_status=true;
       Toast.makeText(MainActivity.this,"playing recording",Toast.LENGTH_SHORT).show();
       play.setText("pause");
+      play_pause_status=true;
     }
-    else{
+    else if (play_pause_status==true){ //pausing
       mediaPlayer.pause();
       play.setText("play");
       Toast.makeText(MainActivity.this,"recording paused",Toast.LENGTH_SHORT).show();
+      play_pause_status=false;
+    }
+
+    else if (play_pause_status==false){
+      mediaPlayer.start();
+      Toast.makeText(MainActivity.this,"playing recording",Toast.LENGTH_SHORT).show();
+      play.setText("pause");
+      play_pause_status=true;
+
     }
 
 
@@ -69,7 +80,11 @@ public class MainActivity extends AppCompatActivity {
 
   public void stop_audio(View view) {
     mediaPlayer.stop();
-    play_status=false;
+    play.setText("play");
+    play_stop_status=false;
+    play_pause_status=false;
+    Toast.makeText(MainActivity.this,"recording stopped",Toast.LENGTH_SHORT).show();
+
   }
 
   /**
