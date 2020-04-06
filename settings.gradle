@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':graphviewlibrary'
 rootProject.name='hearthhealthhear'
