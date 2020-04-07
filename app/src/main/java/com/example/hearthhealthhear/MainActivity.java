@@ -36,15 +36,15 @@ public class MainActivity extends AppCompatActivity {
 //  record or select - play- stop - test
 
   //for wave form
-  public static final String SCALE = "scale";
-  public static final String OUTPUT_DIRECTORY = "VoiceRecorder";
-  public static final String OUTPUT_FILENAME = "recorder.mp3";
-  private static final int MY_PERMISSIONS_REQUEST_CODE = 0;
-  private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-  int scale = 8;
-  private GraphView graphView;
-  private VoiceRecorder recorder;
-  private List samples;
+//  public static final String SCALE = "scale";
+//  public static final String OUTPUT_DIRECTORY = "VoiceRecorder";
+//  public static final String OUTPUT_FILENAME = "recorder.mp3";
+//  private static final int MY_PERMISSIONS_REQUEST_CODE = 0;
+//  private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+//  int scale = 8;
+//  private GraphView graphView;
+//  private VoiceRecorder recorder;
+//  private List samples;
 
 
   @Override
@@ -58,23 +58,23 @@ public class MainActivity extends AppCompatActivity {
     audiofilename = (TextView) findViewById(R.id.filename_view);
 
     //for waveform
-    graphView = (GraphView) findViewById(R.id.graphView);
-    graphView.setGraphColor(Color.rgb(255,255,255));
-    graphView.setCanvasColor(Color.rgb(20,20,20));
-    graphView.setTimeColor(Color.rgb(255, 255, 255));
-    recorder = VoiceRecorder.getInstance();
-    if (recorder.isRecording()) {
-      ((Button) findViewById(R.id.control)).setText(getResources().getString(R.string.stop));
-      recorder.startPlotting(graphView);
-    }
-    if (savedInstanceState != null) {
-      scale = savedInstanceState.getInt(SCALE);
-      graphView.setWaveLengthPX(scale);
-      if (!recorder.isRecording()) {
-        samples = recorder.getSamples();
-        graphView.showFullGraph(samples);
-      }
-    }
+//    graphView = (GraphView) findViewById(R.id.graphView);
+//    graphView.setGraphColor(Color.rgb(255,255,255));
+//    graphView.setCanvasColor(Color.rgb(20,20,20));
+//    graphView.setTimeColor(Color.rgb(255, 255, 255));
+//    recorder = VoiceRecorder.getInstance();
+//    if (recorder.isRecording()) {
+//      ((Button) findViewById(R.id.control)).setText(getResources().getString(R.string.stop));
+//      recorder.startPlotting(graphView);
+//    }
+//    if (savedInstanceState != null) {
+//      scale = savedInstanceState.getInt(SCALE);
+//      graphView.setWaveLengthPX(scale);
+//      if (!recorder.isRecording()) {
+//        samples = recorder.getSamples();
+//        graphView.showFullGraph(samples);
+//      }
+//    }
 
 
 
@@ -101,8 +101,7 @@ public class MainActivity extends AppCompatActivity {
       Toast.makeText(MainActivity.this,"playing recording",Toast.LENGTH_SHORT).show();
       play.setText("pause");
       play_pause_status=true;
-//      mediaPlayer.createVolumeShaper()
-//      mediaPlayer.
+
     }
     else if (play_pause_status==true){ //pausing
       mediaPlayer.pause();
@@ -132,15 +131,14 @@ public class MainActivity extends AppCompatActivity {
     Toast.makeText(MainActivity.this,"recording stopped",Toast.LENGTH_SHORT).show();
 
   }
-
-  public void test_pause(View view){
-    recorder.pauseRecording();
-  }
-  public void continue_rec(View view){
-    recorder.continueRecording();
-//    recorder.startPlotting(graphView);
-
-  }
+//
+//  public void test_pause(View view){
+//    recorder.pauseRecording();
+//  }
+//  public void continue_rec(View view){
+//    recorder.continueRecording();
+//
+//  }
 
 
   /**
@@ -165,91 +163,91 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
-  //for waveform
-  @Override
-  protected void onSaveInstanceState(Bundle outState) {
-    outState.putInt(SCALE, scale);
-    super.onSaveInstanceState(outState);
-  }
-
-
-  public void controlClick(View v) {
-    Toast.makeText(MainActivity.this,"recording audio",Toast.LENGTH_SHORT).show();
-    if (recorder.isRecording()) {
-      System.out.println("-------------"+1);
-      ((Button) findViewById(R.id.control)).setText(this.getResources().getString(R.string.record));
-      graphView.stopPlotting();
-      samples = recorder.stopRecording();
-      graphView.showFullGraph(samples);
-    } else if(checkRecordPermission()&&checkStoragePermission()){
-
-      graphView.reset();
-      String filepath = Environment.getExternalStorageDirectory().getPath();
-      File file = new File(filepath, OUTPUT_DIRECTORY);
-      if (!file.exists()) {
-        file.mkdirs();
-      }
-
-
-      recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + OUTPUT_FILENAME);
-      recorder.startRecording();
-      recorder.startPlotting(graphView);
-      ((Button) findViewById(R.id.control)).setText(this.getResources().getString(R.string.stop));
-    }else{
-      System.out.println("-------------"+3);
-      requestPermissions();
-    }
-  }
-
-
-
-  public void zoomOut(View v) {
-    scale = scale - 1;
-    if (scale < 2) {
-      scale = 2;
-    }
-    graphView.setWaveLengthPX(scale);
-    if (!recorder.isRecording()) {
-      graphView.showFullGraph(samples);
-    }
-  }
-
-
-
-
-  public void requestPermissions(){
-    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-      Manifest.permission.RECORD_AUDIO)) {
-
-      // Show an explanation to the user *asynchronously* -- don't block
-      // this thread waiting for the user's response! After the user
-      // sees the explanation, try again to request the permission.
-      ActivityCompat.requestPermissions(this,
-        new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-        MY_PERMISSIONS_REQUEST_CODE);
-
-    } else {
-      // No explanation needed, we can request the permission.
-
-      ActivityCompat.requestPermissions(this,
-        new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-        MY_PERMISSIONS_REQUEST_CODE);
-      // MY_PERMISSIONS_REQUEST_CODE is an
-      // app-defined int constant. The callback method gets the
-      // result of the request.
-    }
-  }
-
-  private boolean checkRecordPermission() {
-    return ContextCompat.checkSelfPermission(this,
-      Manifest.permission.RECORD_AUDIO)
-      == PackageManager.PERMISSION_GRANTED;
-  }
-
-  private boolean checkStoragePermission() {
-    return ContextCompat.checkSelfPermission(this,
-      Manifest.permission.WRITE_EXTERNAL_STORAGE)
-      == PackageManager.PERMISSION_GRANTED;
-  }
+//  //for waveform
+//  @Override
+//  protected void onSaveInstanceState(Bundle outState) {
+//    outState.putInt(SCALE, scale);
+//    super.onSaveInstanceState(outState);
+//  }
+//
+//
+//  public void controlClick(View v) {
+//    Toast.makeText(MainActivity.this,"recording audio",Toast.LENGTH_SHORT).show();
+//    if (recorder.isRecording()) {
+//      System.out.println("-------------"+1);
+//      ((Button) findViewById(R.id.control)).setText(this.getResources().getString(R.string.record));
+//      graphView.stopPlotting();
+//      samples = recorder.stopRecording();
+//      graphView.showFullGraph(samples);
+//    } else if(checkRecordPermission()&&checkStoragePermission()){
+//
+//      graphView.reset();
+//      String filepath = Environment.getExternalStorageDirectory().getPath();
+//      File file = new File(filepath, OUTPUT_DIRECTORY);
+//      if (!file.exists()) {
+//        file.mkdirs();
+//      }
+//
+//
+//      recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + OUTPUT_FILENAME);
+//      recorder.startRecording();
+//      recorder.startPlotting(graphView);
+//      ((Button) findViewById(R.id.control)).setText(this.getResources().getString(R.string.stop));
+//    }else{
+//      System.out.println("-------------"+3);
+//      requestPermissions();
+//    }
+//  }
+//
+//
+//
+//  public void zoomOut(View v) {
+//    scale = scale - 1;
+//    if (scale < 2) {
+//      scale = 2;
+//    }
+//    graphView.setWaveLengthPX(scale);
+//    if (!recorder.isRecording()) {
+//      graphView.showFullGraph(samples);
+//    }
+//  }
+//
+//
+//
+//
+//  public void requestPermissions(){
+//    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//      Manifest.permission.RECORD_AUDIO)) {
+//
+//      // Show an explanation to the user *asynchronously* -- don't block
+//      // this thread waiting for the user's response! After the user
+//      // sees the explanation, try again to request the permission.
+//      ActivityCompat.requestPermissions(this,
+//        new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//        MY_PERMISSIONS_REQUEST_CODE);
+//
+//    } else {
+//      // No explanation needed, we can request the permission.
+//
+//      ActivityCompat.requestPermissions(this,
+//        new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//        MY_PERMISSIONS_REQUEST_CODE);
+//      // MY_PERMISSIONS_REQUEST_CODE is an
+//      // app-defined int constant. The callback method gets the
+//      // result of the request.
+//    }
+//  }
+//
+//  private boolean checkRecordPermission() {
+//    return ContextCompat.checkSelfPermission(this,
+//      Manifest.permission.RECORD_AUDIO)
+//      == PackageManager.PERMISSION_GRANTED;
+//  }
+//
+//  private boolean checkStoragePermission() {
+//    return ContextCompat.checkSelfPermission(this,
+//      Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//      == PackageManager.PERMISSION_GRANTED;
+//  }
 
 }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Heart">
+    tools:context="voicerecorder.brose.anand.com.voicerecorder.Heart"
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -57,10 +58,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.134" />
 
+
     <com.anand.brose.graphviewlibrary.GraphView
         android:id="@+id/graphView"
-        android:layout_width="375dp"
-        android:layout_height="190dp"
+        android:layout_width="371dp"
+        android:layout_height="215dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -68,13 +70,13 @@
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.567"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.389"></com.anand.brose.graphviewlibrary.GraphView>
-
+        app:layout_constraintVertical_bias="0.4"></com.anand.brose.graphviewlibrary.GraphView>
 
     <Button
-        android:id="@+id/control"
+        android:id="@+id/record_heart_button"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
@@ -92,13 +94,13 @@
         app:layout_constraintVertical_bias="0.72" />
 
     <Button
-        android:id="@+id/pause"
+        android:id="@+id/pause_resume_heart_record_button"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/round_button"
-        android:onClick="record_heart"
+        android:onClick="pause_resume_heart"
         android:text="pause"
         android:textAlignment="center"
         android:textColor="@color/white"
@@ -111,13 +113,13 @@
 
 
     <Button
-        android:id="@+id/stop"
+        android:id="@+id/stop_heart_record_button"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/round_button"
-        android:onClick="record_heart"
+        android:onClick="stop_heart"
         android:text="stop"
         android:textAlignment="center"
         android:textColor="@color/white"
@@ -129,13 +131,13 @@
         app:layout_constraintVertical_bias="0.9" />
 
     <Button
-        android:id="@+id/test"
+        android:id="@+id/test_heart_button"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/round_button"
-        android:onClick="record_heart"
+        android:onClick="test_heart"
         android:text="test"
         android:textAlignment="center"
         android:textColor="@color/white"

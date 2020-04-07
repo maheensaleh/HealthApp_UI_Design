@@ -87,40 +87,15 @@ public class VoiceRecorder {
         mRecordingThread.interrupt();
         if (graphView != null) {
             graphView.pause();
-//            graphView.re/
         }
         myAudioRecorder.pause();
         return pointList;
     }
-//     */
+
+
     public void continueRecording() {
         this.stop = false;
-//        myAudioRecorder = new MediaRecorder();
-//        myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-//        myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-//        myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.DEFAULT);
-//        if (outputFilePath == null) {
-//            String filepath = Environment.getExternalStorageDirectory().getPath();
-//            tempFile = new File(filepath, "AudioRecorder");
-//            if (!tempFile.exists()) {
-//                tempFile.mkdirs();
-//            }
-//            myAudioRecorder.setOutputFile((tempFile.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp3"));
-//            myAudioRecorder.setOutputFile((R.raw.song+""));
-//
-//        } else {
-//            myAudioRecorder.setOutputFile(outputFilePath);
-////            myAudioRecorder.setOutputFile((R.raw.song+".mp3"));
-//
-//        }
-
-//        try {
-//            myAudioRecorder.prepare();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         myAudioRecorder.resume();
-//        pointList.clear();
         mRecordingThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -137,8 +112,7 @@ public class VoiceRecorder {
         });
         mRecordingThread.start();
         graphView.resume();
-//        graphView.setMasterList(pointList);
-//        graphView.startPlotting();
+
 
     }
 
@@ -214,7 +188,6 @@ public class VoiceRecorder {
 
         } else {
             myAudioRecorder.setOutputFile(outputFilePath);
-//            myAudioRecorder.setOutputFile((R.raw.song+".mp3"));
 
         }
 
