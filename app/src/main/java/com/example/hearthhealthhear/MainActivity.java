@@ -133,6 +133,16 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  public void test_pause(View view){
+    recorder.pauseRecording();
+  }
+  public void continue_rec(View view){
+    recorder.continueRecording();
+//    recorder.startPlotting(graphView);
+
+  }
+
+
   /**
    * Dispatch incoming result to the correct fragment.
    *

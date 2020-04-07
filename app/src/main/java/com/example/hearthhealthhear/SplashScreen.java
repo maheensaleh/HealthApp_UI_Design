@@ -46,7 +46,7 @@ public class SplashScreen extends Activity {
 
                 if (current_user!= null){
 
-                    mainintent = new Intent(SplashScreen.this,MainOptions.class);
+                    mainintent = new Intent(SplashScreen.this,MainActivity.class);
                     System.out.println("yes");
 
 

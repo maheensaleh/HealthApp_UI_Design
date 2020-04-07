@@ -4,7 +4,10 @@ package com.example.hearthhealthhear;
  * Created by Anand on 25-03-2016.
  */
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Environment;
+
+import androidx.annotation.RequiresApi;
 
 import com.anand.brose.graphviewlibrary.GraphView;
 import com.anand.brose.graphviewlibrary.WaveSample;
@@ -76,6 +79,67 @@ public class VoiceRecorder {
      */
     public List getSamples() {
         return pointList;
+    }
+
+
+    public List pauseRecording() {
+        this.stop = true;
+        mRecordingThread.interrupt();
+        if (graphView != null) {
+            graphView.pause();
+//            graphView.re/
+        }
+        myAudioRecorder.pause();
+        return pointList;
+    }
+//     */
+    public void continueRecording() {
+        this.stop = false;
+//        myAudioRecorder = new MediaRecorder();
+//        myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+//        myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+//        myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.DEFAULT);
+//        if (outputFilePath == null) {
+//            String filepath = Environment.getExternalStorageDirectory().getPath();
+//            tempFile = new File(filepath, "AudioRecorder");
+//            if (!tempFile.exists()) {
+//                tempFile.mkdirs();
+//            }
+//            myAudioRecorder.setOutputFile((tempFile.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp3"));
+//            myAudioRecorder.setOutputFile((R.raw.song+""));
+//
+//        } else {
+//            myAudioRecorder.setOutputFile(outputFilePath);
+////            myAudioRecorder.setOutputFile((R.raw.song+".mp3"));
+//
+//        }
+
+//        try {
+//            myAudioRecorder.prepare();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        myAudioRecorder.resume();
+//        pointList.clear();
+        mRecordingThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!VoiceRecorder.this.stop) {
+                    //Add current audio sample amplitude and timestamp
+                    pointList.add(new WaveSample(System.currentTimeMillis() - startTime, myAudioRecorder.getMaxAmplitude()));
+                    try {
+                        Thread.sleep(150);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        mRecordingThread.start();
+        graphView.resume();
+//        graphView.setMasterList(pointList);
+//        graphView.startPlotting();
+
     }
 
     /**
