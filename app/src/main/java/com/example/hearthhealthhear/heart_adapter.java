@@ -36,7 +36,7 @@ public class heart_adapter extends ArrayAdapter<recorded_file> {
         System.out.println("file name adapteris "+name);
 
         TextView file_name = (TextView) convertView.findViewById(R.id.record_file_names_heart);
-        file_name.setText(name);
+        file_name.setText("this is "+name);
 
         return convertView;
     }
