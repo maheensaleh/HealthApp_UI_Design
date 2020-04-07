@@ -42,63 +42,66 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/Heart"
-    android:layout_width="162dp"
-    android:layout_height="79dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.538"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.34" />
 
-    <TextView
-        android:layout_width="82dp"
-        android:layout_height="51dp"
-        android:text="heart"
-        android:textSize="15dp"
+    <Button
+        android:id="@+id/heart_button"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:background="@drawable/round_button"
+        android:text="Heart"
         android:textColor="@color/white"
-        android:textStyle="bold"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.338" />
+        app:layout_constraintVertical_bias="0.202" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/lungs"
-    android:layout_width="162dp"
-    android:layout_height="79dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.538"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/lungs_button"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:background="@drawable/round_button"
+        android:text="Lungs"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.39999998" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/about"
-    android:layout_width="162dp"
-    android:layout_height="79dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.538"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.883" />
+    <Button
+        android:id="@+id/records_button"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:background="@drawable/round_button"
+        android:text="Records"
+        android:textColor="@color/white"
+        android:textSize="19dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/records"
-    android:layout_width="162dp"
-    android:layout_height="79dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.538"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.69" />
-
+    <Button
+        android:id="@+id/about_button"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:background="@drawable/round_button"
+        android:text="about"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class MainOptions extends AppCompatActivity {
     String current_user_name;
     String current_user_email;
     private Toolbar mytoolbar;
+    Button heart_button;
 
 
 
@@ -33,11 +35,14 @@ public class MainOptions extends AppCompatActivity {
         setContentView(R.layout.activity_main_options);
         mytoolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mytoolbar);
-
+//
         username = (TextView)findViewById(R.id.user_name);
+        heart_button = (Button)findViewById(R.id.heart_button);
+        heart_button.setText("heart");
         firebaseAuth = FirebaseAuth.getInstance();
         current_user = firebaseAuth.getCurrentUser();
         current_user_name = current_user.getDisplayName();
+
 
         if (current_user_name==null){
             current_user_email= current_user.getEmail();

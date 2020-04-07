@@ -7,7 +7,7 @@
 
     <!--    ITEM1 STARTS HERE-->
     <item android:id="@+id/more"
-        android:icon="@drawable/ic_more_white"
+        android:icon="@drawable/ic_more_horiz_white"
         android:title="settings"
         app:showAsAction="always">
 
@@ -26,11 +26,5 @@
 
 
     <!--    ITEM 1 ENDS HERE-->
-
-
-
-
-
-
 
 </menu>
