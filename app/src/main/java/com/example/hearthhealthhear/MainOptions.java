@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ public class MainOptions extends AppCompatActivity {
     FirebaseUser current_user;
     String current_user_name;
     String current_user_email;
+    String displayname;
     private Toolbar mytoolbar;
     Button heart_button;
 
@@ -47,9 +49,11 @@ public class MainOptions extends AppCompatActivity {
         if (current_user_name==null){
             current_user_email= current_user.getEmail();
             username.setText(current_user_email);
+            displayname=current_user_email;
         }
         else if (current_user_email==null) {
             username.setText(current_user_name);
+            displayname=current_user_name;
         }
         else{
             username.setText("welcome user");
@@ -82,5 +86,29 @@ public class MainOptions extends AppCompatActivity {
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    public void select_heart(View view) {
+        Intent intenttoheart = new Intent(MainOptions.this,Heart.class);
+        intenttoheart.putExtra("username",displayname);
+        startActivity(intenttoheart);
+    }
+
+    public void select_lungs(View view) {
+        Intent intenttolungs = new Intent(MainOptions.this,Lungs.class);
+        intenttolungs.putExtra("username",displayname);
+        startActivity(intenttolungs);
+    }
+
+    public void select_records(View view) {
+        Intent intenttorecords = new Intent(MainOptions.this,Records.class);
+        intenttorecords.putExtra("username",displayname);
+        startActivity(intenttorecords);
+    }
+
+    public void select_about(View view) {
+        Intent intenttoabout = new Intent(MainOptions.this,About.class);
+        intenttoabout.putExtra("username",displayname);
+        startActivity(intenttoabout);
     }
 }
