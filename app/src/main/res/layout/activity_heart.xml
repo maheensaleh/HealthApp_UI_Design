@@ -75,6 +75,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.4"></com.anand.brose.graphviewlibrary.GraphView>
 
+    <EditText
+        android:id="@+id/file_name_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter recording name"
+        android:padding="3dp"
+        android:textColor="@color/blue"
+        android:textSize="15dp"
+        android:text=""
+        android:layout_marginLeft="20dp"
+        android:textColorHint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.214" />
+
     <Button
         android:id="@+id/record_heart_button"
         android:layout_width="80dp"
@@ -147,7 +165,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,17 +6,31 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anand.brose.graphviewlibrary.GraphView;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.List;
@@ -26,6 +40,17 @@ public class Heart extends AppCompatActivity {
     private Toolbar mytoolbar;
     TextView username_view;
     String displayname;
+    private ProgressDialog mProgress;
+    EditText file_name_get;
+
+
+    //for firebase
+    public FirebaseDatabase firebaseDatabase;
+    public DatabaseReference databaseReference;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+    private FirebaseAuth firebaseAuth;
+
 
     //for heart recording and wave
     public static final String SCALE = "scale";
@@ -38,7 +63,7 @@ public class Heart extends AppCompatActivity {
     private VoiceRecorder recorder;
     private List samples;
     private boolean is_paused = false;
-    private Button pause_resume,Brecord_heart,Bstop_heart;
+    private Button pause_resume,Brecord_heart,Bstop_heart,Btest_heart;
 
 
     @Override
@@ -46,9 +71,23 @@ public class Heart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heart);
 
+        mProgress = new ProgressDialog(this);
+        file_name_get = (EditText)findViewById(R.id.file_name_edittext);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference().child("heartRecordings");
+//
+//        prog_bar = (ProgressBar) findViewById(R.id.saving_recording_progress);
+//        prog_bar.setVisibility(View.INVISIBLE);
+
         pause_resume = (Button)findViewById(R.id.pause_resume_heart_record_button);
         Brecord_heart = (Button)findViewById(R.id.record_heart_button);
         Bstop_heart = (Button)findViewById(R.id.stop_heart_record_button);
+        Btest_heart = (Button)findViewById(R.id.test_heart_button);
+        Btest_heart.setEnabled(false);
         Bstop_heart.setEnabled(false);
         pause_resume.setEnabled(false);
 
@@ -84,25 +123,31 @@ public class Heart extends AppCompatActivity {
 
     //-------- following functions are for heart recording and waveform---------//
 
+
     public void record_heart(View view) {
-        Toast.makeText(Heart.this,"recording audio",Toast.LENGTH_SHORT).show();
-        if(checkRecordPermission()&&checkStoragePermission()){
 
-            graphView.reset();
-            String filepath = Environment.getExternalStorageDirectory().getPath();
-            File file = new File(filepath, OUTPUT_DIRECTORY);
-            if (!file.exists()) {
-                file.mkdirs();
+        if (file_name_get.getText().equals("")) {
+            Toast.makeText(Heart.this, "Enter recording name to proceed", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(Heart.this, "recording audio", Toast.LENGTH_SHORT).show();
+            if (checkRecordPermission() && checkStoragePermission()) {
+
+                graphView.reset();
+                String filepath = Environment.getExternalStorageDirectory().getPath();
+                File file = new File(filepath, OUTPUT_DIRECTORY);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + file_name_get.getText()+".mp3");
+                recorder.startRecording();
+                recorder.startPlotting(graphView);
+                Brecord_heart.setEnabled(false);
+                Bstop_heart.setEnabled(true);
+                pause_resume.setEnabled(true);
+
+            } else {
+                requestPermissions();
             }
-            recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + OUTPUT_FILENAME);
-            recorder.startRecording();
-            recorder.startPlotting(graphView);
-            Brecord_heart.setEnabled(false);
-            Bstop_heart.setEnabled(true);
-            pause_resume.setEnabled(true);
-
-        }else{
-            requestPermissions();
         }
     }
 
@@ -134,13 +179,45 @@ public class Heart extends AppCompatActivity {
             Brecord_heart.setEnabled(true);
             Bstop_heart.setEnabled(false);
             pause_resume.setEnabled(false);
-
+            Btest_heart.setEnabled(true);
     }
 
 
     public void test_heart(View view) {
-        Toast.makeText(Heart.this,"testing heart for diseasse...",Toast.LENGTH_SHORT).show();
+
+
+        mProgress.setMessage("Saving audio");
+        mProgress.show();
+        final Uri path ;
+
+        Toast.makeText(Heart.this, "testing heart for diseasse...", Toast.LENGTH_SHORT).show();
+        Uri recording_uri = recorder.get_recording_uri();
+        System.out.println("path is   " + recording_uri);
+        final StorageReference audio_ref = storageReference.child(recording_uri.getLastPathSegment());
+        audio_ref.putFile(recording_uri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                audio_ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString());
+                        Toast.makeText(Heart.this, "Recording saved !", Toast.LENGTH_SHORT).show();
+                        databaseReference.push().setValue(for_database);
+                        mProgress.dismiss();
+                        Intent showResult = new Intent(Heart.this,Result.class);
+                        showResult.putExtra("displayname",displayname);
+                        startActivity(showResult);
+                    }
+                });
+            }
+        });
+
+        finishActivity(0);
+
+
     }
+
+
 
 
     @Override
@@ -183,5 +260,36 @@ public class Heart extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED;
     }
+
+
+
+//    ------------------
+
+
+    // for option menus
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu1,menu);
+        return super.onCreateOptionsMenu(menu);
+
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                firebaseAuth.signOut();
+                Intent tosignin  = new Intent(Heart.this, Signin.class);
+                Toast.makeText(Heart.this, "logging out", Toast.LENGTH_SHORT).show();
+                startActivity(tosignin);
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
 
 }

@@ -4,6 +4,7 @@ package com.example.hearthhealthhear;
  * Created by Anand on 25-03-2016.
  */
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 
@@ -209,10 +210,17 @@ public class VoiceRecorder {
                         Thread.sleep(150);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                 }
                 }
             }
         });
         mRecordingThread.start();
     }
+
+    public Uri get_recording_uri(){
+
+        Uri my_uri = Uri.fromFile(new File(outputFilePath));
+        return my_uri;
+    }
+
 }
