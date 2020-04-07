@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+
+    <!--    ITEM1 STARTS HERE-->
+    <item android:id="@+id/more"
+        android:icon="@drawable/ic_more_white"
+        android:title="settings"
+        app:showAsAction="always">
+
+        <menu>
+
+
+            <item
+                android:id="@+id/logout"
+                android:title="Logout"
+                android:icon="@drawable/ic_backspace_blue">
+            </item>
+
+        </menu>
+    </item>
+
+
+
+    <!--    ITEM 1 ENDS HERE-->
+
+
+
+
+
+
+
+</menu>

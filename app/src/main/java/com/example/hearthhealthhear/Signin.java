@@ -45,14 +45,10 @@ public class Signin extends AppCompatActivity {
 
                 if (current_user!= null){
                     //means user signed in
-//                    onSignIn(current_user.getDisplayName());
-                    profilepic = current_user.getPhotoUrl().toString();
                     System.out.println("scsc"+profilepic);
                     Toast.makeText(Signin.this," sign in successful !",Toast.LENGTH_LONG).show();
-                    fromsigin = new Intent(Signin.this,MainActivity.class);
-                    fromsigin.putExtra("profilepic_uri",profilepic);
+                    fromsigin = new Intent(Signin.this,MainOptions.class);
                     Signin.this.startActivity(fromsigin);
-                    System.out.println("yes"+profilepic);
                     Signin.this.finish();
 
 
@@ -60,7 +56,6 @@ public class Signin extends AppCompatActivity {
 
                 else{
                     //user not signed in
-                    // now display the firebase sign in ui7jjj
                     System.out.println("no");
                     Toast.makeText(Signin.this,"Not signed in !",Toast.LENGTH_LONG).show();
                     startActivityForResult(
@@ -95,7 +90,7 @@ public class Signin extends AppCompatActivity {
         if (requestCode == 1) {
 
             if (resultCode == RESULT_OK) {
-                Intent intent = new Intent(Signin.this, MainActivity.class);
+                Intent intent = new Intent(Signin.this, MainOptions.class);
                 Toast.makeText(Signin.this, "success", Toast.LENGTH_SHORT).show();
                 System.out.println("back to main");
                 Signin.this.startActivity(intent);

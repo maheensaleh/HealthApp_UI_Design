@@ -34,11 +34,7 @@ public class SplashScreen extends Activity {
 
         //authentication instance
         firebaseAuth = FirebaseAuth.getInstance(); // initiate the authentication objject
-        //authentication providers list
-//        final List<AuthUI.IdpConfig> providers = Arrays.asList(
-//                new AuthUI.IdpConfig.GoogleBuilder().build(),
-//                new AuthUI.IdpConfig.FacebookBuilder().build()
-//        );
+
         //authentication listener
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -49,12 +45,8 @@ public class SplashScreen extends Activity {
                 FirebaseUser current_user = firebaseAuth.getCurrentUser();
 
                 if (current_user!= null){
-                    //means user signed in
-//                    onSignIn(current_user.getDisplayName());
-//                    Toast.makeText(MainActivity.this," sign in successful !",Toast.LENGTH_LONG).show();
-                    String profilepic_uri = current_user.getPhotoUrl().toString();
-                    mainintent = new Intent(SplashScreen.this,MainActivity.class);
-                    mainintent.putExtra("profilepic_uri",profilepic_uri);
+
+                    mainintent = new Intent(SplashScreen.this,MainOptions.class);
                     System.out.println("yes");
 
 
@@ -65,17 +57,6 @@ public class SplashScreen extends Activity {
                     // now display the firebase sign in ui7jjj
                     mainintent = new Intent(SplashScreen.this,Signin.class);
                     System.out.println("no");
-//                    Toast.makeText(MainActivity.this,"Not signed in !",Toast.LENGTH_LONG).show();
-//                    onSignOut();
-//                    startActivityForResult(
-//                            AuthUI.getInstance()
-//                                    .createSignInIntentBuilder()
-//                                    .setAvailableProviders(providers)
-//                                    .setIsSmartLockEnabled(false)
-//                                    .build(),
-//                            1);
-
-
 
                 }
             }
