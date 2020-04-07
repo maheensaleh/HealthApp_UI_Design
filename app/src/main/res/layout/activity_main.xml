@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:paddingBottom="@dimen/activity_vertical_margin"
-  android:paddingLeft="@dimen/activity_horizontal_margin"
-  android:paddingRight="@dimen/activity_horizontal_margin"
-  android:paddingTop="@dimen/activity_vertical_margin"
-  tools:context="voicerecorder.brose.anand.com.voicerecorder.MainActivity"
-  android:padding="0dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="voicerecorder.brose.anand.com.voicerecorder.MainActivity"
+    android:padding="0dp">
 
   <com.anand.brose.graphviewlibrary.GraphView
     android:id="@+id/graphView"
@@ -25,30 +26,6 @@
     android:fillViewport="true"></com.anand.brose.graphviewlibrary.GraphView>
 
   <Button
-    android:text="+"
-    android:layout_alignParentRight="true"
-    android:alpha="0.8"
-    android:layout_width="40dp"
-    android:id="@+id/zoomIn"
-    android:layout_height="40dp"
-    android:layout_marginRight="5dp"
-    android:backgroundTint="@android:color/holo_red_dark"
-    android:textColor="@android:color/background_light"
-    android:layout_marginTop="10dp"
-    android:onClick="zoomIn" />
-  <Button
-    android:text="-"
-    android:layout_width="40dp"
-    android:layout_alignParentRight="true"
-    android:alpha="0.8"
-    android:id="@+id/zoomOu"
-    android:layout_height="40dp"
-    android:layout_marginTop="45dp"
-    android:layout_marginRight="5dp"
-    android:backgroundTint="@android:color/holo_red_dark"
-    android:textColor="@android:color/background_light"
-    android:onClick="zoomOut" />
-  <Button
     android:layout_width="wrap_content"
     android:text="@string/record"
     android:id="@+id/control"
@@ -62,6 +39,77 @@
     android:layout_height="40dp"
     android:textAlignment="center"
     android:backgroundTint="@android:color/holo_red_dark" />
+
+  <Button
+      android:id="@+id/record_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentBottom="true"
+      android:layout_marginEnd="171dp"
+      android:layout_marginRight="171dp"
+      android:layout_marginBottom="594dp"
+      android:onClick="select_audiofile"
+      android:text="record"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.498"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.146" />
+
+  <TextView
+      android:id="@+id/filename_view"
+      android:layout_width="wrap_content"
+      android:layout_height="50dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentBottom="true"
+      android:layout_marginEnd="162dp"
+      android:layout_marginRight="162dp"
+      android:layout_marginBottom="523dp"
+      android:hint="audio name"
+      android:textAlignment="center"
+      android:textSize="20dp" />
+
+  <Button
+      android:id="@+id/play_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentBottom="true"
+      android:layout_marginEnd="177dp"
+      android:layout_marginRight="177dp"
+      android:layout_marginBottom="449dp"
+      android:onClick="play_audio"
+      android:text="play" />
+
+  <Button
+      android:id="@+id/test_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentBottom="true"
+      android:layout_marginEnd="284dp"
+      android:layout_marginRight="284dp"
+      android:layout_marginBottom="448dp"
+      android:text="test" />
+
+  <Button
+      android:id="@+id/stop_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentBottom="true"
+      android:layout_marginEnd="69dp"
+      android:layout_marginRight="69dp"
+      android:layout_marginBottom="454dp"
+      android:onClick="stop_audio"
+      android:text="stop" />
 
 </RelativeLayout>
 

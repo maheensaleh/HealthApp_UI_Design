@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "144667957796",
+    "firebase_url": "https://healthcare-d17d3.firebaseio.com",
+    "project_id": "healthcare-d17d3",
+    "storage_bucket": "healthcare-d17d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144667957796:android:6c2f483f387ae8ee32d6b1",
+        "android_client_info": {
+          "package_name": "com.example.hearthhealthhear"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144667957796-lntq04kai5s0oqqkf54eckp3av3agbo0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hearthhealthhear",
+            "certificate_hash": "7667561c003521784619a003aa0ad2567c21bae1"
+          }
+        },
+        {
+          "client_id": "144667957796-h8ig2og6s655fbbnaq231j7soc2h6v9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxGeAQYbvMsJYwyO4X72R8MUfcP29mttY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "144667957796-h8ig2og6s655fbbnaq231j7soc2h6v9a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

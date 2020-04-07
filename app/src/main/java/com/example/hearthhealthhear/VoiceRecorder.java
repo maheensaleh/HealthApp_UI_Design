@@ -146,9 +146,14 @@ public class VoiceRecorder {
                 tempFile.mkdirs();
             }
             myAudioRecorder.setOutputFile((tempFile.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp3"));
+            myAudioRecorder.setOutputFile((R.raw.song+""));
+
         } else {
             myAudioRecorder.setOutputFile(outputFilePath);
+//            myAudioRecorder.setOutputFile((R.raw.song+".mp3"));
+
         }
+
         try {
             myAudioRecorder.prepare();
         } catch (IOException e) {

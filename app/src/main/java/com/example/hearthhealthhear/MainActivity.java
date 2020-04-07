@@ -27,13 +27,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-//  Button select,play,stop;
-//  TextView audiofilename;
-//  private Uri audiofile_uri;
-//  private MediaPlayer mediaPlayer;
-//  private Boolean play_stop_status=false;
-//  private Boolean play_pause_status=false;
-  //record or select - play- stop - test
+  Button select,play,stop;
+  TextView audiofilename;
+  private Uri audiofile_uri;
+  private MediaPlayer mediaPlayer;
+  private Boolean play_stop_status=false;
+  private Boolean play_pause_status=false;
+//  record or select - play- stop - test
 
   //for wave form
   public static final String SCALE = "scale";
@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-//    select = (Button)findViewById(R.id.record_button);
-//    play = (Button)findViewById(R.id.play_button);
-//    stop = (Button)findViewById(R.id.stop_button);
-//    audiofilename = (TextView) findViewById(R.id.filename_view);
+    select = (Button)findViewById(R.id.record_button);
+    play = (Button)findViewById(R.id.play_button);
+    stop = (Button)findViewById(R.id.stop_button);
+    audiofilename = (TextView) findViewById(R.id.filename_view);
 
     //for waveform
     graphView = (GraphView) findViewById(R.id.graphView);
@@ -89,69 +89,71 @@ public class MainActivity extends AppCompatActivity {
 //    startActivityForResult(intent, 0);
   }
 //
-//  public void play_audio(View view) throws IOException {
-//
-//    if (play_stop_status==false) { //playing
-//      mediaPlayer = new MediaPlayer();
-//      mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//      mediaPlayer.setDataSource(getApplicationContext(), audiofile_uri);
-//      mediaPlayer.prepare();
-//      mediaPlayer.start();
-//      play_stop_status=true;
-//      Toast.makeText(MainActivity.this,"playing recording",Toast.LENGTH_SHORT).show();
-//      play.setText("pause");
-//      play_pause_status=true;
-//    }
-//    else if (play_pause_status==true){ //pausing
-//      mediaPlayer.pause();
-//      play.setText("play");
-//      Toast.makeText(MainActivity.this,"recording paused",Toast.LENGTH_SHORT).show();
-//      play_pause_status=false;
-//    }
-//
-//    else if (play_pause_status==false){
-//      mediaPlayer.start();
-//      Toast.makeText(MainActivity.this,"playing recording",Toast.LENGTH_SHORT).show();
-//      play.setText("pause");
-//      play_pause_status=true;
-//
-//    }
-//
-//
-//  }
+  public void play_audio(View view) throws IOException {
+
+    if (play_stop_status==false) { //playing
+      mediaPlayer = new MediaPlayer();
+      mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+      mediaPlayer.setDataSource(getApplicationContext(), audiofile_uri);
+      mediaPlayer.prepare();
+      mediaPlayer.start();
+      play_stop_status=true;
+      Toast.makeText(MainActivity.this,"playing recording",Toast.LENGTH_SHORT).show();
+      play.setText("pause");
+      play_pause_status=true;
+//      mediaPlayer.createVolumeShaper()
+//      mediaPlayer.
+    }
+    else if (play_pause_status==true){ //pausing
+      mediaPlayer.pause();
+      play.setText("play");
+      Toast.makeText(MainActivity.this,"recording paused",Toast.LENGTH_SHORT).show();
+      play_pause_status=false;
+    }
+
+    else if (play_pause_status==false){
+      mediaPlayer.start();
+      Toast.makeText(MainActivity.this,"playing recording",Toast.LENGTH_SHORT).show();
+      play.setText("pause");
+      play_pause_status=true;
+
+    }
+
+
+  }
 
 
 
-//  public void stop_audio(View view) {
-//    mediaPlayer.stop();
-//    play.setText("play");
-//    play_stop_status=false;
-//    play_pause_status=false;
-//    Toast.makeText(MainActivity.this,"recording stopped",Toast.LENGTH_SHORT).show();
-//
-//  }
-//
-//  /**
-//   * Dispatch incoming result to the correct fragment.
-//   *
-//   * @param requestCode
-//   * @param resultCode
-//   * @param data
-//   */
-//  @Override
-//  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//    super.onActivityResult(requestCode, resultCode, data);
-//
-//    if (requestCode==0){
-//      audiofile_uri = data.getData();
-//      System.out.println("uri : "+audiofile_uri);
-//      audiofilename.setText("Audio file selected !");
-//
-//    }
-//
-//
-//
-//  }
+  public void stop_audio(View view) {
+    mediaPlayer.stop();
+    play.setText("play");
+    play_stop_status=false;
+    play_pause_status=false;
+    Toast.makeText(MainActivity.this,"recording stopped",Toast.LENGTH_SHORT).show();
+
+  }
+
+  /**
+   * Dispatch incoming result to the correct fragment.
+   *
+   * @param requestCode
+   * @param resultCode
+   * @param data
+   */
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode==0){
+      audiofile_uri = data.getData();
+      System.out.println("uri : "+audiofile_uri);
+      audiofilename.setText("Audio file selected !");
+
+    }
+
+
+
+  }
 
   //for waveform
   @Override
@@ -164,22 +166,27 @@ public class MainActivity extends AppCompatActivity {
   public void controlClick(View v) {
     Toast.makeText(MainActivity.this,"recording audio",Toast.LENGTH_SHORT).show();
     if (recorder.isRecording()) {
+      System.out.println("-------------"+1);
       ((Button) findViewById(R.id.control)).setText(this.getResources().getString(R.string.record));
       graphView.stopPlotting();
       samples = recorder.stopRecording();
       graphView.showFullGraph(samples);
     } else if(checkRecordPermission()&&checkStoragePermission()){
+
       graphView.reset();
       String filepath = Environment.getExternalStorageDirectory().getPath();
       File file = new File(filepath, OUTPUT_DIRECTORY);
       if (!file.exists()) {
         file.mkdirs();
       }
+
+
       recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + OUTPUT_FILENAME);
       recorder.startRecording();
       recorder.startPlotting(graphView);
       ((Button) findViewById(R.id.control)).setText(this.getResources().getString(R.string.stop));
     }else{
+      System.out.println("-------------"+3);
       requestPermissions();
     }
   }
@@ -197,17 +204,6 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-
-  public void zoomIn(View v) {
-    scale = scale + 1;
-    if (scale > 15) {
-      scale = 15;
-    }
-    graphView.setWaveLengthPX(scale);
-    if (!recorder.isRecording()) {
-      graphView.showFullGraph(samples);
-    }
-  }
 
 
 
