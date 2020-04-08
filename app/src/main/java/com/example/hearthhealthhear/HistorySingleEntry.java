@@ -1,35 +1,43 @@
 package com.example.hearthhealthhear;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 public class HistorySingleEntry extends AppCompatActivity {
 
 
-    String displayname;
+    String displayname,key;
     TextView username,recordfile_name;
     private Toolbar mytoolbar;
     private FirebaseAuth firebaseAuth;
     String fileName;
     String filePath;
     private MediaPlayer mediaPlayer;
+    Button play_stop,pause_resume,rename,share,delete;
+    Boolean is_paused =false;
+    Boolean isstop  = true;
+    Intent gomain ;
+
 
 
     @Override
@@ -42,10 +50,12 @@ public class HistorySingleEntry extends AppCompatActivity {
         final Intent getterintent = getIntent();
         displayname = getterintent.getStringExtra("username");
         username.setText(displayname);
-
+        gomain = new Intent(HistorySingleEntry.this,HeartHistroy.class);
         firebaseAuth = FirebaseAuth.getInstance();
 
         recordfile_name = (TextView)findViewById(R.id.record_name);
+        key = getterintent.getStringExtra("key");
+        System.out.println("keys is "+key);
         fileName= getterintent.getStringExtra("file_name");
         filePath = getterintent.getStringExtra("file_path");
         System.out.println("name is "+fileName+"and path is "+filePath);
@@ -53,6 +63,14 @@ public class HistorySingleEntry extends AppCompatActivity {
 
         mytoolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mytoolbar);
+
+        play_stop = (Button)findViewById(R.id.play_stop_history);
+        pause_resume = (Button)findViewById(R.id.pause_resume_history);
+        rename= (Button)findViewById(R.id.rename_history);
+        share= (Button)findViewById(R.id.share_histroy);
+        delete=(Button)findViewById(R.id.delete_history);
+        pause_resume.setEnabled(false);
+
 //
 
     }
@@ -85,22 +103,99 @@ public class HistorySingleEntry extends AppCompatActivity {
 
     public void play_audio(View view) throws IOException {
 
-
-        mediaPlayer = new MediaPlayer();
+        if (isstop){
+            mediaPlayer = new MediaPlayer();
 //        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setDataSource(filePath);
+            mediaPlayer.setDataSource(filePath);
 
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mediaPlayer.start();
+                    Toast.makeText(HistorySingleEntry.this,"Playing !",Toast.LENGTH_SHORT).show();
+                }
+            });
+            mediaPlayer.prepare();
+
+            isstop=false;
+            play_stop.setText("stop");
+            pause_resume.setEnabled(true);
+        }
+
+        else if (!isstop){
+            isstop= true;
+            play_stop.setText("play");
+            mediaPlayer.stop();
+            pause_resume.setEnabled(false);
+            Toast.makeText(HistorySingleEntry.this,"Stoped !",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    public void pause_resume(View view) {
+
+        if (!is_paused){
+            mediaPlayer.pause();
+            is_paused=true;
+            pause_resume.setText("resume");
+            Toast.makeText(HistorySingleEntry.this,"Paused !",Toast.LENGTH_SHORT).show();
+
+        }
+
+        else if(is_paused){
+            mediaPlayer.start();
+            is_paused=false;
+            pause_resume.setText("pause");
+            Toast.makeText(HistorySingleEntry.this,"Resumed !",Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    public void rename_audio_file(View view) {
+
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.edit_namelayout, null);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+        dialogBuilder.getWindow().setLayout(800, 600);
+
+
+        final EditText editText = (EditText) dialogView.findViewById(R.id.new_name_edittext);
+        Button button1 = (Button) dialogView.findViewById(R.id.get_newname_button);
+
+        button1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                mediaPlayer.start();
+            public void onClick(View view) {
+                String newname = editText.getText().toString();
+                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+                recorded_file edited = new recorded_file(newname,filePath);
+                databaseReference.child(key).setValue(edited);
+                dialogBuilder.dismiss();
+                recordfile_name.setText(newname);
+                gomain  = new Intent(HistorySingleEntry.this,MainOptions.class);
             }
         });
-        mediaPlayer.prepare();
 
 
 
 
+    }
 
+    public void delete_audio_file(View view) {
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+        databaseReference.child(key).setValue(null);
+        Intent gomain = new Intent(HistorySingleEntry.this,MainOptions.class);
+        startActivity(gomain);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(gomain);
     }
 }

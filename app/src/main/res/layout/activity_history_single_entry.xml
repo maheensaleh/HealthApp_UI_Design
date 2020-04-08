@@ -56,46 +56,44 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.261" />
 
+
     <Button
-        android:id="@+id/play_pause_history"
+        android:id="@+id/play_stop_history"
         android:layout_width="93dp"
         android:layout_height="91dp"
         android:background="@drawable/round_button"
+        android:onClick="play_audio"
         android:text="Play"
-        android:onClick="play_audio"
         android:textAlignment="center"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.301"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.531" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/stop_history"
+        android:id="@+id/pause_resume_history"
         android:layout_width="93dp"
         android:layout_height="91dp"
         android:background="@drawable/round_button"
-        android:text="stop"
-        android:onClick="play_audio"
+        android:onClick="pause_resume"
+        android:text="pause"
         android:textAlignment="center"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.301"
+        app:layout_constraintHorizontal_bias="0.729"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.531" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/rename_history"
         android:layout_width="93dp"
         android:layout_height="91dp"
         android:background="@drawable/round_button"
+        android:onClick="rename_audio_file"
         android:text="rename"
-        android:onClick="play_audio"
         android:textAlignment="center"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -103,6 +101,39 @@
         app:layout_constraintHorizontal_bias="0.301"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.531" />
+        app:layout_constraintVertical_bias="0.715" />
+
+    <Button
+        android:id="@+id/share_histroy"
+        android:layout_width="93dp"
+        android:layout_height="91dp"
+        android:background="@drawable/round_button"
+        android:onClick="play_audio"
+        android:text="share"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.895" />
+
+    <Button
+        android:id="@+id/delete_history"
+        android:layout_width="93dp"
+        android:layout_height="91dp"
+        android:background="@drawable/round_button"
+        android:onClick="delete_audio_file"
+        android:text="Delete"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.729"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.715" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

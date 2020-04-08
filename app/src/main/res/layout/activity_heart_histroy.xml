@@ -44,32 +44,35 @@
 
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:text="Heart Records"
         android:textAlignment="center"
         android:textColor="@color/blue"
         android:textSize="30dp"
-        android:text="Heart Records"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.12" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.035" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="575dp"
+        android:layout_width="340dp"
+        android:layout_height="486dp"
         android:layout_alignParentRight="true"
 
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="25dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.566">
 
         <ListView
             android:id="@+id/heart_history_listview"
