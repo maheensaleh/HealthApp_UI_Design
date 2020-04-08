@@ -13,11 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HeartHistroy"></activity>
+        <activity android:name=".HistorySingleEntry"></activity>
+        <activity android:name=".HeartHistroy" />
         <activity android:name=".LungHistory" />
-        <activity android:name=".RecordsPopUp"
+        <activity
+            android:name=".RecordsPopUp"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".Result" />
         <activity android:name=".About" />
         <activity android:name=".Lungs" />

@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +60,7 @@ public class HeartHistroy extends AppCompatActivity {
 //
         username = (TextView)findViewById(R.id.user_name);
 
-        Intent getdisplayname = getIntent();
+        final Intent getdisplayname = getIntent();
         displayname = getdisplayname.getStringExtra("username");
         username.setText(displayname);
 
@@ -104,6 +107,21 @@ public class HeartHistroy extends AppCompatActivity {
         mProgress.setMessage("Loading records ...");
         mProgress.show();
         databaseReference.addChildEventListener(childEventListener);
+
+
+        mylistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Intent goto_thisrecord = new Intent(HeartHistroy.this,HistorySingleEntry.class);
+                goto_thisrecord.putExtra("file_name", heart_history.get(i).file_name);
+                goto_thisrecord.putExtra("file_path", heart_history.get(i).file_path);
+                goto_thisrecord.putExtra("username",displayname);
+                System.out.println("sending " + heart_history.get(i)  );
+                startActivity(goto_thisrecord);
+            }
+        });
+
 
 
 
