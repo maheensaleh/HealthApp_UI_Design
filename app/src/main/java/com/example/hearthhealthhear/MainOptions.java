@@ -50,7 +50,7 @@ public class MainOptions extends AppCompatActivity {
         System.out.println("usernae is "+current_user_name);
         System.out.println("email is "+current_user.getEmail());
 
-        if (current_user_name.equals("") || current_user_name==null){
+        if (current_user_name==null || current_user_name.equals("")){
 //            current_user_email= current_user.getEmail();
 //            username.setText(current_user_email);
 //            displayname=current_user_email;
