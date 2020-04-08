@@ -101,7 +101,7 @@ public class MainOptions extends AppCompatActivity {
     }
 
     public void select_records(View view) {
-        Intent intenttorecords = new Intent(MainOptions.this,Records.class);
+        Intent intenttorecords = new Intent(MainOptions.this,RecordsPopUp.class);
         intenttorecords.putExtra("username",displayname);
         startActivity(intenttorecords);
     }

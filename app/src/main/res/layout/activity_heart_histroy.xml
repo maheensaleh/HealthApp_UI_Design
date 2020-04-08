@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Records">
-
+    tools:context=".HeartHistroy">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -43,58 +42,42 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <!--TAB LAYOUT START-->
 
-    <!-- TAB LAYOUT ENDS    -->
-
-
-    <!--    CONTENT HOLDER-->
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayout"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/blue"
+        android:layout_height="50dp"
+        android:textAlignment="center"
+        android:textColor="@color/blue"
+        android:textSize="30dp"
+        android:text="Heart Records"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.091"
-        app:tabIndicatorColor="@color/white"
-        app:tabIndicatorHeight="4dp"
-        app:tabTextColor="#FFFFFF">
+        app:layout_constraintVertical_bias="0.12" />
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/heart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="heart"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="585dp"
+        android:layout_alignParentRight="true"
 
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/lungs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lungs"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/myviewpager"
-        android:layout_width="416dp"
-        android:layout_height="633dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.942">
+        app:layout_constraintVertical_bias="1.0">
 
+        <ListView
+            android:id="@+id/heart_history_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
 
-    </androidx.viewpager.widget.ViewPager>
+        </ListView>
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
