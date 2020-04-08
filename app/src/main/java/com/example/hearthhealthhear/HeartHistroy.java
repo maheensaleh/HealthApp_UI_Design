@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -41,12 +42,15 @@ public class HeartHistroy extends AppCompatActivity {
     private heart_adapter adapter;
     private ListView mylistview;
 
+    private ProgressDialog mProgress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heart_histroy);
 
+        mProgress = new ProgressDialog(this);
 
         mytoolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mytoolbar);
@@ -73,8 +77,7 @@ public class HeartHistroy extends AppCompatActivity {
 //                String some = newdata.getAddress();
 //                tester.setText("Address "+some);
                 adapter.add(newdata);
-                System.out.println("222222222222222");
-
+                mProgress.dismiss();
             }
 
             @Override
@@ -97,7 +100,9 @@ public class HeartHistroy extends AppCompatActivity {
 
             }
         };
-        System.out.println("1111111111");
+
+        mProgress.setMessage("Loading records ...");
+        mProgress.show();
         databaseReference.addChildEventListener(childEventListener);
 
 
