@@ -207,12 +207,13 @@ public class Heart extends AppCompatActivity {
                         Intent showResult = new Intent(Heart.this,Result.class);
                         showResult.putExtra("displayname",displayname);
                         startActivity(showResult);
+                        finish();
+
                     }
                 });
             }
         });
 
-        finishActivity(0);
 
 
     }
@@ -286,6 +287,7 @@ public class Heart extends AppCompatActivity {
                 Intent tosignin  = new Intent(Heart.this, Signin.class);
                 Toast.makeText(Heart.this, "logging out", Toast.LENGTH_SHORT).show();
                 startActivity(tosignin);
+                finish();
             default:
                 return super.onContextItemSelected(item);
         }

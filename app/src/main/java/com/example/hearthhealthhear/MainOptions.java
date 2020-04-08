@@ -46,10 +46,30 @@ public class MainOptions extends AppCompatActivity {
         current_user_name = current_user.getDisplayName();
 
 
-        if (current_user_name==null){
-            current_user_email= current_user.getEmail();
-            username.setText(current_user_email);
-            displayname=current_user_email;
+        System.out.println("000000000000000000000000000000000");
+        System.out.println("usernae is "+current_user_name);
+        System.out.println("email is "+current_user.getEmail());
+
+        if (current_user_name.equals("") || current_user_name==null){
+//            current_user_email= current_user.getEmail();
+//            username.setText(current_user_email);
+//            displayname=current_user_email;
+            String email_id = current_user.getEmail();
+            int inde = 0;
+            for (int i =0; i<email_id.length();i++){
+                System.out.println("---------------------------");
+                System.out.println("this "+email_id.charAt(i));
+                if (email_id.substring(i,i+1).equals("@")){
+                    System.out.println("got it");
+                    inde = i;
+                    break;
+                }
+            }
+
+            current_user_email = current_user.getEmail();
+            displayname = email_id.substring(0,inde);
+            username.setText(displayname);
+
         }
         else if (current_user_email==null) {
             username.setText(current_user_name);

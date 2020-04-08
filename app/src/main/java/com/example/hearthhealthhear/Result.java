@@ -70,5 +70,6 @@ public class Result extends AppCompatActivity {
         System.out.println("88888888888888888");
         Intent gomain = new Intent(Result.this,MainOptions.class);
         startActivity(gomain);
+        finish();
     }
 }

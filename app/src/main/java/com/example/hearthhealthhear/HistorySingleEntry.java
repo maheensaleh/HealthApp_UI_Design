@@ -196,6 +196,7 @@ public class HistorySingleEntry extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        gomain.putExtra("username",displayname);
         startActivity(gomain);
     }
 }

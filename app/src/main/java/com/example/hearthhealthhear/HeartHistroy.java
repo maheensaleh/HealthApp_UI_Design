@@ -158,6 +158,7 @@ public class HeartHistroy extends AppCompatActivity {
                 System.out.println("sending " + heart_history.get(i)  );
                 resume_status = true;
                 startActivity(goto_thisrecord);
+                finish();
             }
         });
     }
