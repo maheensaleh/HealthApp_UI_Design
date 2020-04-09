@@ -45,24 +45,25 @@
 
     <Button
         android:id="@+id/heart_button"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:background="@drawable/round_button"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:background="@drawable/round_squares"
         android:onClick="select_heart"
         android:text="Heart"
         android:textColor="@color/white"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.18" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.137" />
 
     <Button
         android:id="@+id/lungs_button"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:background="@drawable/round_button"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:background="@drawable/round_squares"
         android:onClick="select_lungs"
         android:text="Lungs"
         android:textColor="@color/white"
@@ -71,14 +72,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.39999998" />
+        app:layout_constraintTop_toBottomOf="@+id/heart_button"
+        app:layout_constraintVertical_bias="0.105" />
 
     <Button
         android:id="@+id/records_button"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:background="@drawable/round_button"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:background="@drawable/round_squares"
         android:onClick="select_records"
         android:text="Records"
         android:textColor="@color/white"
@@ -87,14 +88,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.63" />
+        app:layout_constraintTop_toBottomOf="@+id/lungs_button"
+        app:layout_constraintVertical_bias="0.19" />
 
     <Button
         android:id="@+id/about_button"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:background="@drawable/round_button"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:background="@drawable/round_squares"
         android:onClick="select_about"
         android:text="about"
         android:textColor="@color/white"
@@ -103,8 +104,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.86" />
+        app:layout_constraintTop_toBottomOf="@+id/records_button"
+        app:layout_constraintVertical_bias="0.272" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

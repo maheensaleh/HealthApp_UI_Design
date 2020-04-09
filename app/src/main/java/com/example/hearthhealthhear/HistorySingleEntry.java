@@ -30,6 +30,7 @@ public class HistorySingleEntry extends AppCompatActivity {
     TextView username,recordfile_name;
     private Toolbar mytoolbar;
     private FirebaseAuth firebaseAuth;
+    private String type;
     String fileName;
     String filePath;
     private MediaPlayer mediaPlayer;
@@ -37,6 +38,8 @@ public class HistorySingleEntry extends AppCompatActivity {
     Boolean is_paused =false;
     Boolean isstop  = true;
     Intent gomain ;
+    private FirebaseDatabase firebaseDatabase ;
+    private DatabaseReference databaseReference;
 
 
 
@@ -48,8 +51,9 @@ public class HistorySingleEntry extends AppCompatActivity {
         username = (TextView)findViewById(R.id.user_name);
 
         final Intent getterintent = getIntent();
+        type = getterintent.getStringExtra("type");
         displayname = getterintent.getStringExtra("username");
-        username.setText(displayname);
+        username.setText("Heart AI");
         gomain = new Intent(HistorySingleEntry.this,HeartHistroy.class);
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -70,6 +74,14 @@ public class HistorySingleEntry extends AppCompatActivity {
         share= (Button)findViewById(R.id.share_histroy);
         delete=(Button)findViewById(R.id.delete_history);
         pause_resume.setEnabled(false);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+
+
+        if (type.equals("heart")){
+            databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());}
+        else{
+            databaseReference = firebaseDatabase.getReference("lungs").child(firebaseAuth.getUid());}
 
 //
 
@@ -168,8 +180,7 @@ public class HistorySingleEntry extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String newname = editText.getText().toString();
-                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+
                 recorded_file edited = new recorded_file(newname,filePath);
                 databaseReference.child(key).setValue(edited);
                 dialogBuilder.dismiss();
@@ -185,8 +196,7 @@ public class HistorySingleEntry extends AppCompatActivity {
 
     public void delete_audio_file(View view) {
 
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+
         databaseReference.child(key).setValue(null);
         Intent gomain = new Intent(HistorySingleEntry.this,MainOptions.class);
         startActivity(gomain);

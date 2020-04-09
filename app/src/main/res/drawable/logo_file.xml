@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/ss"/>
+
+    <item android:top="500dp">
+        <bitmap
+            android:src="@drawable/ss"
+            android:gravity="bottom|center_horizontal" />
+    </item>
+</selector>

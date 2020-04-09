@@ -24,7 +24,7 @@ public class MainOptions extends AppCompatActivity {
     FirebaseUser current_user;
     String current_user_name;
     String current_user_email;
-    String displayname;
+    String displayname="Health AI";
     private Toolbar mytoolbar;
     Button heart_button;
 
@@ -39,6 +39,7 @@ public class MainOptions extends AppCompatActivity {
         setSupportActionBar(mytoolbar);
 //
         username = (TextView)findViewById(R.id.user_name);
+        username.setText(displayname);
         heart_button = (Button)findViewById(R.id.heart_button);
         heart_button.setText("heart");
         firebaseAuth = FirebaseAuth.getInstance();
@@ -50,34 +51,34 @@ public class MainOptions extends AppCompatActivity {
         System.out.println("usernae is "+current_user_name);
         System.out.println("email is "+current_user.getEmail());
 
-        if (current_user_name==null || current_user_name.equals("")){
-//            current_user_email= current_user.getEmail();
-//            username.setText(current_user_email);
-//            displayname=current_user_email;
-            String email_id = current_user.getEmail();
-            int inde = 0;
-            for (int i =0; i<email_id.length();i++){
-                System.out.println("---------------------------");
-                System.out.println("this "+email_id.charAt(i));
-                if (email_id.substring(i,i+1).equals("@")){
-                    System.out.println("got it");
-                    inde = i;
-                    break;
-                }
-            }
-
-            current_user_email = current_user.getEmail();
-            displayname = email_id.substring(0,inde);
-            username.setText(displayname);
-
-        }
-        else if (current_user_email==null) {
-            username.setText(current_user_name);
-            displayname=current_user_name;
-        }
-        else{
-            username.setText("welcome user");
-        }
+//        if (current_user_name==null || current_user_name.equals("")){
+////            current_user_email= current_user.getEmail();
+////            username.setText(current_user_email);
+////            displayname=current_user_email;
+//            String email_id = current_user.getEmail();
+//            int inde = 0;
+//            for (int i =0; i<email_id.length();i++){
+//                System.out.println("---------------------------");
+//                System.out.println("this "+email_id.charAt(i));
+//                if (email_id.substring(i,i+1).equals("@")){
+//                    System.out.println("got it");
+//                    inde = i;
+//                    break;
+//                }
+//            }
+//
+//            current_user_email = current_user.getEmail();
+//            displayname = email_id.substring(0,inde);
+//            username.setText(displayname);
+//
+//        }
+//        else if (current_user_email==null) {
+//            username.setText(current_user_name);
+//            displayname=current_user_name;
+//        }
+//        else{
+//            username.setText("welcome user");
+//        }
 
 
     }

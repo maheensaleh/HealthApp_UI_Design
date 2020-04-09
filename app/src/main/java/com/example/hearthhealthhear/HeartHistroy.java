@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -54,7 +55,6 @@ public class HeartHistroy extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heart_histroy);
-        Toast.makeText(HeartHistroy.this,"activity started ",Toast.LENGTH_SHORT).show();
         mProgress = new ProgressDialog(this);
 
         mytoolbar= (Toolbar) findViewById(R.id.toolbar);
@@ -64,7 +64,7 @@ public class HeartHistroy extends AppCompatActivity {
 
         final Intent getdisplayname = getIntent();
         displayname = getdisplayname.getStringExtra("username");
-        username.setText(displayname);
+        username.setText("Heart AI");
 
         load_data();
 
@@ -98,7 +98,7 @@ public class HeartHistroy extends AppCompatActivity {
 
     public void load_data ( ){
 
-        Toast.makeText(HeartHistroy.this,"laoding data .....",Toast.LENGTH_SHORT).show();
+        Toast.makeText(HeartHistroy.this,"loading data .....",Toast.LENGTH_SHORT).show();
         heart_history= new ArrayList<>();
         keys =new ArrayList<>();
         adapter = new heart_adapter(this,R.layout.heart_listview,heart_history);
@@ -144,6 +144,21 @@ public class HeartHistroy extends AppCompatActivity {
         mProgress.setMessage("Loading records ...");
         mProgress.show();
         databaseReference.addChildEventListener(childEventListener);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()==null){
+                    Toast.makeText(HeartHistroy.this,"No Past Records !",Toast.LENGTH_SHORT).show();
+                    mProgress.dismiss();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         mylistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -155,6 +170,7 @@ public class HeartHistroy extends AppCompatActivity {
                 goto_thisrecord.putExtra("file_path", heart_history.get(i).file_path);
                 goto_thisrecord.putExtra("username",displayname);
                 goto_thisrecord.putExtra("key",keys.get(i));
+                goto_thisrecord.putExtra("type","heart");
                 System.out.println("sending " + heart_history.get(i)  );
                 resume_status = true;
                 startActivity(goto_thisrecord);

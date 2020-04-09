@@ -7,28 +7,65 @@
     android:windowSoftInputMode="adjustPan|adjustResize"
     tools:context=".RecordsPopUp">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="@color/blue"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="-100dp">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="240dp"
+                android:layout_height="43dp"
+                android:padding="0dp"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="25dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.045"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+
     <Button
         android:id="@+id/heart_his_button"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="170dp"
+        android:layout_height="68dp"
         android:layout_marginStart="16dp"
-        android:background="@drawable/round_button"
+        android:background="@drawable/round_squares"
         android:onClick="goto_heart_his"
         android:text="Heart History"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/lungs_his_button"
+        app:layout_constraintBottom_toTopOf="@+id/lungs_his_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.403" />
+        app:layout_constraintVertical_bias="0.793" />
 
     <Button
         android:id="@+id/lungs_his_button"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:background="@drawable/round_button"
+        android:layout_width="170dp"
+        android:layout_height="68dp"
+        android:background="@drawable/round_squares"
         android:onClick="gotto_lungs_his"
         android:text="Lungs History"
         android:textAlignment="center"
@@ -36,9 +73,9 @@
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.864"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.403" />
+        app:layout_constraintVertical_bias="0.645" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -50,19 +50,19 @@
         android:text="Heart Disease Detection"
         android:textAlignment="center"
         android:textColor="@color/blue"
-        android:textSize="30dp"
+        android:textSize="25dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.041" />
+        app:layout_constraintVertical_bias="0.03" />
 
     <com.anand.brose.graphviewlibrary.GraphView
         android:id="@+id/graphView"
-        android:layout_width="371dp"
-        android:layout_height="215dp"
+        android:layout_width="355dp"
+        android:layout_height="164dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -82,7 +82,7 @@
         android:layout_marginLeft="20dp"
         android:hint="Enter recording name"
         android:padding="3dp"
-        android:text=""
+        android:text="Recording name"
         android:textColor="@color/blue"
         android:textColorHint="@color/blue"
         android:textSize="15dp"
@@ -106,10 +106,11 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.26"
+        app:layout_constraintHorizontal_bias="0.259"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.72" />
+        app:layout_constraintTop_toBottomOf="@+id/graphView"
+        app:layout_constraintVertical_bias="0.187" />
+
 
     <Button
         android:id="@+id/pause_resume_heart_record_button"
@@ -124,11 +125,10 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintHorizontal_bias="0.752"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.72" />
-
+        app:layout_constraintTop_toBottomOf="@+id/graphView"
+        app:layout_constraintVertical_bias="0.187" />
 
     <Button
         android:id="@+id/stop_heart_record_button"
@@ -143,10 +143,10 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.26"
+        app:layout_constraintHorizontal_bias="0.259"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toBottomOf="@+id/record_heart_button"
+        app:layout_constraintVertical_bias="0.49" />
 
     <Button
         android:id="@+id/test_heart_button"
@@ -161,10 +161,10 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintHorizontal_bias="0.752"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toBottomOf="@+id/pause_resume_heart_record_button"
+        app:layout_constraintVertical_bias="0.49" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

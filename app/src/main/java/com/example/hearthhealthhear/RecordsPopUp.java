@@ -8,50 +8,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class RecordsPopUp extends Activity {
 
     Intent popdown;
     String username;
+    FirebaseAuth firebaseAuth;
+    TextView username_view;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_records_pop_up);
+        username_view = (TextView)findViewById(R.id.user_name);
+        username_view.setText("Heart AI");
 
-        // to set the size of popup window
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;
-        int height = dm.heightPixels;
-        getWindow().setLayout((int) (width * 0.9), (int) (height * 0.75));
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.gravity = Gravity.CENTER;
-        params.x = 0;
-        params.y = 0;
-        getWindow().setAttributes(params);
-
-        Intent getname =  getIntent();
-        username = getname.getStringExtra("username");
-
-
-//        // when close is clicked
-//        popdown= new Intent(RecordsPopUp.this,lungs_adapter.class);
-//        final Button button =findViewById(R.id.close);
-//        button.setOnClickListener(new View.OnClickListener()
-//
-//        {
-//            @Override
-//            public void onClick (View v){
-//                startActivity(popdown);
-//                finish();
-//            }
-//
-//        }
 
 }
 
@@ -72,4 +54,33 @@ public class RecordsPopUp extends Activity {
         startActivity(popdown);
         finish();
     }
+
+
+
+    // for option menus
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu1,menu);
+        return super.onCreateOptionsMenu(menu);
+
+
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                firebaseAuth.signOut();
+                Intent tosignin  = new Intent(RecordsPopUp.this, Signin.class);
+                Toast.makeText(RecordsPopUp.this, "logging out", Toast.LENGTH_SHORT).show();
+                startActivity(tosignin);
+                finish();
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+}

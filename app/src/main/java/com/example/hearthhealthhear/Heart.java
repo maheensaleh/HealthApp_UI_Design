@@ -126,7 +126,7 @@ public class Heart extends AppCompatActivity {
 
     public void record_heart(View view) {
 
-        if (file_name_get.getText().equals("")) {
+        if (file_name_get.getText().equals("Recording name")) {
             Toast.makeText(Heart.this, "Enter recording name to proceed", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(Heart.this, "recording audio", Toast.LENGTH_SHORT).show();
