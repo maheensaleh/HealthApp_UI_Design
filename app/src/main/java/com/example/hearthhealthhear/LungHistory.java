@@ -113,7 +113,6 @@ public class LungHistory extends AppCompatActivity {
             public void onChildAdded( DataSnapshot dataSnapshot,  String s) {
 
                 recorded_file newdata = dataSnapshot.getValue(recorded_file.class);
-                Toast.makeText(LungHistory.this,"value is "+newdata.toString(),Toast.LENGTH_LONG).show();
                     keys.add(dataSnapshot.getKey());
                     adapter.add(newdata);
                     dataSnapshot.getKey();
