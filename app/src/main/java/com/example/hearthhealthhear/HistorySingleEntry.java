@@ -53,7 +53,7 @@ public class HistorySingleEntry extends AppCompatActivity {
         final Intent getterintent = getIntent();
         type = getterintent.getStringExtra("type");
         displayname = getterintent.getStringExtra("username");
-        username.setText("Heart AI");
+        username.setText("Health AI");
         gomain = new Intent(HistorySingleEntry.this,HeartHistroy.class);
         firebaseAuth = FirebaseAuth.getInstance();
 

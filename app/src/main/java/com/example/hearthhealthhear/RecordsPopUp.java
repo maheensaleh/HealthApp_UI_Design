@@ -32,7 +32,7 @@ public class RecordsPopUp extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_records_pop_up);
         username_view = (TextView)findViewById(R.id.user_name);
-        username_view.setText("Heart AI");
+        username_view.setText("Health AI");
 
 
 }

@@ -64,7 +64,7 @@ public class HeartHistroy extends AppCompatActivity {
 
         final Intent getdisplayname = getIntent();
         displayname = getdisplayname.getStringExtra("username");
-        username.setText("Heart AI");
+        username.setText("Health AI");
 
         load_data();
 
