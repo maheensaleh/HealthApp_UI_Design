@@ -32,8 +32,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anand.brose.graphviewlibrary.GraphView;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -42,7 +47,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -52,6 +63,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -66,7 +78,8 @@ public class Heart extends AppCompatActivity implements
     private ProgressDialog mProgress;
     EditText file_name_get;
 
-
+    //for drive
+    DriveServiceHelper driveServiceHelper;
 
     //for firebase
     public FirebaseDatabase firebaseDatabase;
@@ -96,6 +109,7 @@ public class Heart extends AppCompatActivity implements
     private List samples;
     private boolean is_paused = false;
     private Button pause_resume,Brecord_heart,Bstop_heart,Btest_heart;
+    File file;
 
 
     @Override
@@ -150,8 +164,80 @@ public class Heart extends AppCompatActivity implements
                 graphView.showFullGraph(samples);
             }
         }
+        requestSignin();
+
 
     }
+
+
+
+
+    //for drive
+
+    private void requestSignin() {
+
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestScopes(new Scope(DriveScopes.DRIVE_FILE ))
+                .build();
+        GoogleSignInClient client = GoogleSignIn.getClient(this,signInOptions);
+        startActivityForResult(client.getSignInIntent(),1);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+
+            case 1:
+                if (resultCode==RESULT_OK){
+
+                    handleSignInIntent(data);
+                }
+
+                break;
+        }
+    }
+
+    private void handleSignInIntent(Intent data) {
+
+        GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
+            @Override
+            public void onSuccess(GoogleSignInAccount googleSignInAccount) {
+
+                GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(Heart.this, Collections.singleton((DriveScopes.DRIVE_FILE)));
+                credential.setSelectedAccount(googleSignInAccount.getAccount());
+
+                Drive googleDriveServices = new Drive.Builder(
+                        AndroidHttp.newCompatibleTransport(),
+                        new GsonFactory(),
+                        credential)
+                        .setApplicationName("my test 1")
+                        .build();
+
+                driveServiceHelper = new DriveServiceHelper(googleDriveServices);
+
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+    }
+
+    public void uploadData(View view){
+
+
+
+
+    }
+
+
 
     //-------- following functions are for heart recording and waveform---------//
 
@@ -166,7 +252,7 @@ public class Heart extends AppCompatActivity implements
 
                 graphView.reset();
                 String filepath = Environment.getExternalStorageDirectory().getPath();
-                File file = new File(filepath, OUTPUT_DIRECTORY);
+                file = new File(filepath, OUTPUT_DIRECTORY);
                 if (!file.exists()) {
                     file.mkdirs();
                 }
@@ -176,6 +262,8 @@ public class Heart extends AppCompatActivity implements
                 Brecord_heart.setEnabled(false);
                 Bstop_heart.setEnabled(true);
                 pause_resume.setEnabled(true);
+                System.out.println("this fil epath is "+file+"/" + file_name_get.getText()+".mp3");
+
 
             } else {
                 requestPermissions();
@@ -233,6 +321,24 @@ public class Heart extends AppCompatActivity implements
                     @Override
                     public void onSuccess(Uri uri) {
                         System.out.println("from test address "+address);
+                        System.out.println("path form test"+file+"/" + file_name_get.getText()+".mp3");
+
+                        //for drive
+                        String path  =file+"/" + file_name_get.getText()+".mp3";
+                        driveServiceHelper.createfile(path,file_name_get.getText()+"("+address+")"+".mp3").addOnSuccessListener(new OnSuccessListener<String>() {
+                            @Override
+                            public void onSuccess(String s) {
+                                System.out.println("uploaded to drive");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                System.out.println("not uploaded to drive");
+
+                            }
+                        });
+
+
                         recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),address.toString());
                         Toast.makeText(Heart.this, "Recording saved !", Toast.LENGTH_SHORT).show();
                         databaseReference.push().setValue(for_database);
