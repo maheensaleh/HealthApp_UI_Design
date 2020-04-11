@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.location.Address;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.util.List;
 
 public class HistorySingleEntry extends AppCompatActivity {
 
@@ -33,6 +35,7 @@ public class HistorySingleEntry extends AppCompatActivity {
     private String type;
     String fileName;
     String filePath;
+    String address;
     private MediaPlayer mediaPlayer;
     Button play_stop,pause_resume,rename,share,delete;
     Boolean is_paused =false;
@@ -62,6 +65,7 @@ public class HistorySingleEntry extends AppCompatActivity {
         System.out.println("keys is "+key);
         fileName= getterintent.getStringExtra("file_name");
         filePath = getterintent.getStringExtra("file_path");
+        address = getterintent.getStringExtra("address");
         System.out.println("name is "+fileName+"and path is "+filePath);
         recordfile_name.setText(fileName);
 
@@ -181,7 +185,7 @@ public class HistorySingleEntry extends AppCompatActivity {
             public void onClick(View view) {
                 String newname = editText.getText().toString();
 
-                recorded_file edited = new recorded_file(newname,filePath);
+                recorded_file edited = new recorded_file(newname,filePath,address);
                 databaseReference.child(key).setValue(edited);
                 dialogBuilder.dismiss();
                 recordfile_name.setText(newname);

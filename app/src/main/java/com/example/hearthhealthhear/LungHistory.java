@@ -170,6 +170,7 @@ public class LungHistory extends AppCompatActivity {
                 Intent goto_thisrecord = new Intent(LungHistory.this,HistorySingleEntry.class);
                 goto_thisrecord.putExtra("file_name", heart_history.get(i).file_name);
                 goto_thisrecord.putExtra("file_path", heart_history.get(i).file_path);
+                goto_thisrecord.putExtra("address", heart_history.get(i).addr.toString());
                 goto_thisrecord.putExtra("username",displayname);
                 goto_thisrecord.putExtra("key",keys.get(i));
                 goto_thisrecord.putExtra("type","lungs");
