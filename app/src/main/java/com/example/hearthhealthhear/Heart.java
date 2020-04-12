@@ -116,6 +116,8 @@ public class Heart extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heart);
+        initialize_gps();
+
 
         mProgress = new ProgressDialog(this);
         file_name_get = (EditText)findViewById(R.id.file_name_edittext);
@@ -253,10 +255,10 @@ public class Heart extends AppCompatActivity implements
                 graphView.reset();
                 String filepath = Environment.getExternalStorageDirectory().getPath();
                 file = new File(filepath, OUTPUT_DIRECTORY);
+                recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + file_name_get.getText()+".mp3");
                 if (!file.exists()) {
                     file.mkdirs();
                 }
-                recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + file_name_get.getText()+".mp3");
                 recorder.startRecording();
                 recorder.startPlotting(graphView);
                 Brecord_heart.setEnabled(false);
@@ -305,7 +307,6 @@ public class Heart extends AppCompatActivity implements
 
     public void test_heart(View view) {
 
-        initialize_gps();
         mProgress.setMessage("Saving audio");
         mProgress.show();
         final Uri path ;
@@ -320,31 +321,19 @@ public class Heart extends AppCompatActivity implements
                 audio_ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        System.out.println("from test address "+address);
-                        System.out.println("path form test"+file+"/" + file_name_get.getText()+".mp3");
-
-                        //for drive
-                        String path  =file+"/" + file_name_get.getText()+".mp3";
-                        driveServiceHelper.createfile(path,file_name_get.getText()+"("+address+")"+".mp3").addOnSuccessListener(new OnSuccessListener<String>() {
-                            @Override
-                            public void onSuccess(String s) {
-                                System.out.println("uploaded to drive");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                System.out.println("not uploaded to drive");
-
-                            }
-                        });
-
 
                         recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),address.toString());
                         Toast.makeText(Heart.this, "Recording saved !", Toast.LENGTH_SHORT).show();
                         databaseReference.push().setValue(for_database);
                         mProgress.dismiss();
+                        System.out.println("from test address "+address);
+                        System.out.println("path form test"+file+"/" + file_name_get.getText()+".mp3");
+                        String path  =file+"/" + file_name_get.getText()+".mp3";
+                        driveServiceHelper.createfile(path,file_name_get.getText()+"("+address+")"+".mp3");
+                        System.out.println("name on drive "+file_name_get.getText()+"("+address+")"+".mp3");
                         Intent showResult = new Intent(Heart.this,Result.class);
                         showResult.putExtra("displayname",displayname);
+
                         startActivity(showResult);
                         finish();
 
@@ -352,6 +341,21 @@ public class Heart extends AppCompatActivity implements
                 });
             }
         });
+
+        //                        //for drive
+//                        String path  =file+"/" + file_name_get.getText()+".mp3";
+//                        driveServiceHelper.createfile(path,file_name_get.getText()+"("+address+")"+".mp3").addOnSuccessListener(new OnSuccessListener<String>() {
+//                            @Override
+//                            public void onSuccess(String s) {
+//                                System.out.println("uploaded to drive");
+//                            }
+//                        }).addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                System.out.println("not uploaded to drive");
+//
+//                            }
+//                        });
 
 
 
