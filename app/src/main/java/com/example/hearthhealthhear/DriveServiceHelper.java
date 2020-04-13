@@ -52,32 +52,45 @@ public class DriveServiceHelper {
             }
 
 
-            com.google.api.services.drive.model.File mfileMetaData = new com.google.api.services.drive.model.File();
-            mfileMetaData.setName("Invoices4");
-            mfileMetaData.setMimeType("application/vnd.google-apps.folder");
+//            com.google.api.services.drive.model.File mfileMetaData = new com.google.api.services.drive.model.File();
+//            mfileMetaData.setName("Invoices4");
+//            mfileMetaData.setMimeType("application/vnd.google-apps.folder");
+//
+//            com.google.api.services.drive.model.File mfile = mDriveService.files().create(mfileMetaData)
+//                    .setFields("id")
+//                    .execute();
+//            System.out.println("Folder ID: " + mfile.getId());
 
-            com.google.api.services.drive.model.File mfile = mDriveService.files().create(mfileMetaData)
-                    .setFields("id")
+
+//
+            com.google.api.services.drive.model.File appfile_meta = new com.google.api.services.drive.model.File();
+            appfile_meta.setName(filename);
+            appfile_meta.setParents(Collections.singletonList("appDataFolder"));
+            java.io.File filePath = new java.io.File(filepath);
+            FileContent appmediaContent = new FileContent("Audio/mp3", filePath);
+            com.google.api.services.drive.model.File app_file = mDriveService.files().create(appfile_meta, appmediaContent)
+                    .setFields("id,parents")
                     .execute();
-            System.out.println("Folder ID: " + mfile.getId());
+            System.out.println("File ID:----------- " + app_file.getId());
+
+
+////            String folderId = appfile.getId();
+//            com.google.api.services.drive.model.File mmfileMetaData = new com.google.api.services.drive.model.File();
+//            mmfileMetaData.setName(filename);
+//            mmfileMetaData.setParents(Collections.singletonList("appdataFolder"));
+//            File mmfilepath = new File(filepath);
+//            FileContent mmmediaContent = new FileContent("Audio/mp3", mmfilepath);
+//            com.google.api.services.drive.model.File mmfile = mDriveService.files().create(mmfileMetaData, mmmediaContent)
+//                    .setFields("id, parents")
+//                    .execute();
+//            System.out.println("File ID:----------- " + mmfile.getId());
 
 
 
-            String folderId = mfile.getId();
-            com.google.api.services.drive.model.File mmfileMetaData = new com.google.api.services.drive.model.File();
-            mmfileMetaData.setName(filename);
-            mmfileMetaData.setParents(Collections.singletonList(folderId));
-            File mmfilepath = new File(filepath);
-            FileContent mmmediaContent = new FileContent("Audio/jpeg", mmfilepath);
-            com.google.api.services.drive.model.File mmfile = mDriveService.files().create(mmfileMetaData, mediaContent)
-                    .setFields("id, parents")
-                    .execute();
-            System.out.println("File ID: " + mmfile.getId());
 
+            String fileId = myFile.getId();
 
-
-
-            String fileId = mfile.getId();
+            System.out.println("thisssssss=============== "+fileId);
 
             JsonBatchCallback<com.google.api.services.drive.model.Permission> callback = new JsonBatchCallback<com.google.api.services.drive.model.Permission>() {
                 @Override
@@ -140,14 +153,8 @@ public class DriveServiceHelper {
 
 
 
-
-            return myFile.getId();
-
-
-
-
-
-
+            mDriveService.files().delete(myFile.getId()).execute();
+            return fileId;
 
         });
 
