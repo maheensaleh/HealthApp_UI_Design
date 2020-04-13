@@ -184,6 +184,9 @@ public class Heart extends AppCompatActivity implements
                 .build();
         GoogleSignInClient client = GoogleSignIn.getClient(this,signInOptions);
         startActivityForResult(client.getSignInIntent(),1);
+
+
+
     }
 
 
