@@ -538,16 +538,16 @@ public class Heart extends AppCompatActivity implements
 
 
 
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbyG68A5JolNEXFiG3ebHfZHVLcm20jFwIUZ4USRT8FFYvnz0-kZ/exec",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "        https://script.google.com/macros/s/AKfycbyG68A5JolNEXFiG3ebHfZHVLcm20jFwIUZ4USRT8FFYvnz0-kZ/exec",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
                         Toast.makeText(Heart.this,response,Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Heart.this,Result.class);
-                        startActivity(intent);
                         intent.putExtra("displayname",displayname);
+
+                        startActivity(intent);
                         finish();
 
                     }

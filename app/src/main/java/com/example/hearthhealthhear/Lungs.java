@@ -33,6 +33,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anand.brose.graphviewlibrary.GraphView;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -49,8 +57,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class Lungs extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -233,10 +243,8 @@ public class Lungs extends AppCompatActivity implements
                         Toast.makeText(Lungs.this, "Recording saved !", Toast.LENGTH_SHORT).show();
                         databaseReference.push().setValue(for_database);
                         mProgress.dismiss();
-                        Intent showResult = new Intent(Lungs.this,Result.class);
-                        showResult.putExtra("displayname",displayname);
-                        startActivity(showResult);
-                        finish();
+                        addItemToSheet(file_name_get.getText().toString(),address.toString());
+
 
                     }
                 });
@@ -479,6 +487,65 @@ public class Lungs extends AppCompatActivity implements
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    ///// api google sheet
+
+    //This is the part where data is transafeered from Your Android phone to Sheet by using HTTP Rest API calls
+
+    private void   addItemToSheet(String fname, String flocation) {
+
+        final String filename = fname ;
+        final String location = flocation;
+
+
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbwyU20DHEU9nZ1Ek-rt_Vo09gt26YmoCVhPF809bHqoz92jLwQ/exec",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Toast.makeText(Lungs.this,response,Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(Lungs.this,Result.class);
+                        intent.putExtra("displayname",displayname);
+
+                        startActivity(intent);
+                        finish();
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> parmas = new HashMap<>();
+
+                //here we pass params
+                parmas.put("action","addItem");
+                parmas.put("filename",filename);
+                parmas.put("location",location);
+
+                return parmas;
+            }
+        };
+
+        int socketTimeOut = 50000;// u can change this .. here it is 50 seconds
+
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(retryPolicy);
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        queue.add(stringRequest);
+
+
     }
 
 
