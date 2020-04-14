@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -50,8 +51,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,6 +69,11 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -80,6 +91,7 @@ public class Heart extends AppCompatActivity implements
 
     //for drive
     DriveServiceHelper driveServiceHelper;
+    Drive service;
 
     //for firebase
     public FirebaseDatabase firebaseDatabase;
@@ -118,13 +130,67 @@ public class Heart extends AppCompatActivity implements
         setContentView(R.layout.activity_heart);
         initialize_gps();
 
+        HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+        JsonFactory JSON_FACTORY = new JacksonFactory();
+        GoogleCredential credential;
+
+        try {
+            String p12Password = "notasecret";
+
+            ClassLoader classLoader = MainActivity.class.getClassLoader();
+            AssetManager am = getAssets();
+            KeyStore keystore = KeyStore.getInstance("PKCS12");
+            InputStream keyFileStream = am.open("pk.p12");
+//                    InputStream keyFileStream = new ("pfile.p12");
+
+            if (keyFileStream == null){
+                throw new Exception("Key File Not Found.");
+            }
+
+            keystore.load(keyFileStream, p12Password.toCharArray());
+            PrivateKey key = (PrivateKey)keystore.getKey("privatekey", p12Password.toCharArray());
+//                    Collections scopes = new Collections();
+            List scopes = new ArrayList();
+            Collections.addAll(scopes, "https://www.googleapis.com/auth/drive", "https://www.googleapis.com/auth/drive.appdata", "https://www.googleapis.com/auth/drive.file");
+            credential = new GoogleCredential.Builder()
+                    .setTransport(HTTP_TRANSPORT)
+                    .setJsonFactory(JSON_FACTORY)
+                    .setServiceAccountId("drivetest13@quickstart-1586668416329.iam.gserviceaccount.com")
+                    .setServiceAccountScopes(scopes)
+                    .setServiceAccountPrivateKey(key)
+                    .build();
+            service= new Drive.Builder(
+                    AndroidHttp.newCompatibleTransport(),
+                    new GsonFactory(),
+                    credential)
+                    .setApplicationName("my test 1")
+                    .build();
+
+            System.out.println("service account :=========="+service.files().list());
+
+
+
+
+
+
+
+
+
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
 
         mProgress = new ProgressDialog(this);
         file_name_get = (EditText)findViewById(R.id.file_name_edittext);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+        databaseReference = firebaseDatabase.getReference("lungs").child(firebaseAuth.getUid());
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("heartRecordings");
 //
