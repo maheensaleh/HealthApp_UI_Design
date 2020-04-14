@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -260,8 +261,8 @@ public class Heart extends AppCompatActivity implements
                         databaseReference.push().setValue(for_database);
                         heartAll.push().setValue(for_database);
                         heartAll_tmp.push().setValue(for_database);
-                        addItemToSheet(file_name_get.getText().toString(),address.toString());
-                        mProgress.dismiss();
+                        addItemToSheet(file_name_get.getText().toString(),address.toString(),mProgress);
+//                        mProgress.dismiss();
                         System.out.println("from test address "+address);
                         System.out.println("path form test"+file+"/" + file_name_get.getText()+".mp3");
 //                        Intent showResult = new Intent(Heart.this,Result.class);
@@ -514,7 +515,7 @@ public class Heart extends AppCompatActivity implements
 
     ///// api google sheet
 
-    public  void addaudio(String uri){
+    public  void addaudio(String uri,ProgressDialog mProgress){
 //        SimpleMultiPartRequest
         SimpleMultiPartRequest simpleMultiPartRequest = new SimpleMultiPartRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbzNOMXA_Us8VEuxdz6DGX1dOAEySK-nJFDU-CZ1B0hAlppGnDRq/exec",
                 new Response.Listener<String>() {
@@ -540,7 +541,7 @@ public class Heart extends AppCompatActivity implements
 
     //This is the part where data is transafeered from Your Android phone to Sheet by using HTTP Rest API calls
 
-    private void   addItemToSheet(String fname, String flocation) {
+    private void   addItemToSheet(String fname, String flocation, ProgressDialog progressDialog) {
 
         final String filename = fname ;
         final String location = flocation;
@@ -551,7 +552,7 @@ public class Heart extends AppCompatActivity implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        progressDialog.dismiss();
                         Toast.makeText(Heart.this,response,Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Heart.this,Result.class);
                         intent.putExtra("displayname",displayname);
