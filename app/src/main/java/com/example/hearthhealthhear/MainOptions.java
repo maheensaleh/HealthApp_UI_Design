@@ -75,12 +75,6 @@ public class MainOptions extends AppCompatActivity implements
     DatabaseReference databaseReference;
     List<String> existing;
 
-    DriveServiceHelper driveServiceHelper;
-    GoogleApiClient mGoogleApiClient;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +85,7 @@ public class MainOptions extends AppCompatActivity implements
 
         mProgress = new ProgressDialog(this);
         dbutton = (Button)findViewById(R.id.getdata);
-        dbutton.setVisibility(View.INVISIBLE);
+        dbutton.setVisibility(View.VISIBLE);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -111,7 +105,7 @@ public class MainOptions extends AppCompatActivity implements
         System.out.println("000000000000000000000000000000000");
         System.out.println("usernae is "+current_user_name);
         System.out.println("email is "+current_user.getEmail());
-        if (current_user.getEmail().equals("salehmaheen@gmail.com")){
+        if (current_user.getEmail().equals("salehmaheen@gmail.com") || current_user.getEmail().equals("samarjahan01n1965@gmail.com")){
             dbutton.setVisibility(View.VISIBLE);
 //            requestSignin();
 
@@ -171,66 +165,8 @@ public class MainOptions extends AppCompatActivity implements
 
     }
 
-    //for drive
-
-    private void requestSignin() {
-
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestScopes(new Scope(DriveScopes.DRIVE_FILE ))
-                .build();
-        GoogleSignInClient client = GoogleSignIn.getClient(this,signInOptions);
-        startActivityForResult(client.getSignInIntent(),1);
 
 
-
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode){
-
-            case 1:
-                if (resultCode==RESULT_OK){
-
-                    handleSignInIntent(data);
-                }
-
-                break;
-        }
-    }
-
-    private void handleSignInIntent(Intent data) {
-
-        GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
-            @Override
-            public void onSuccess(GoogleSignInAccount googleSignInAccount) {
-
-                GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(MainOptions.this, Collections.singleton((DriveScopes.DRIVE_FILE)));
-                credential.setSelectedAccount(googleSignInAccount.getAccount());
-
-                Drive googleDriveServices = new Drive.Builder(
-                        AndroidHttp.newCompatibleTransport(),
-                        new GsonFactory(),
-                        credential)
-                        .setApplicationName("admindrive")
-                        .build();
-
-                driveServiceHelper = new DriveServiceHelper(googleDriveServices);
-
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-
-    }
 
 
     // for option menus

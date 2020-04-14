@@ -2,6 +2,7 @@ package com.example.hearthhealthhear;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -89,9 +90,7 @@ public class Heart extends AppCompatActivity implements
     private ProgressDialog mProgress;
     EditText file_name_get;
 
-    //for drive
-    DriveServiceHelper driveServiceHelper;
-    Drive service;
+
 
     //for firebase
     public FirebaseDatabase firebaseDatabase;
@@ -130,72 +129,14 @@ public class Heart extends AppCompatActivity implements
         setContentView(R.layout.activity_heart);
         initialize_gps();
 
-        HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-        JsonFactory JSON_FACTORY = new JacksonFactory();
-        GoogleCredential credential;
-
-        try {
-            String p12Password = "notasecret";
-
-            ClassLoader classLoader = MainActivity.class.getClassLoader();
-            AssetManager am = getAssets();
-            KeyStore keystore = KeyStore.getInstance("PKCS12");
-            InputStream keyFileStream = am.open("pk.p12");
-//                    InputStream keyFileStream = new ("pfile.p12");
-
-            if (keyFileStream == null){
-                throw new Exception("Key File Not Found.");
-            }
-
-            keystore.load(keyFileStream, p12Password.toCharArray());
-            PrivateKey key = (PrivateKey)keystore.getKey("privatekey", p12Password.toCharArray());
-//                    Collections scopes = new Collections();
-            List scopes = new ArrayList();
-            Collections.addAll(scopes, "https://www.googleapis.com/auth/drive", "https://www.googleapis.com/auth/drive.appdata", "https://www.googleapis.com/auth/drive.file");
-            credential = new GoogleCredential.Builder()
-                    .setTransport(HTTP_TRANSPORT)
-                    .setJsonFactory(JSON_FACTORY)
-                    .setServiceAccountId("drivetest13@quickstart-1586668416329.iam.gserviceaccount.com")
-                    .setServiceAccountScopes(scopes)
-                    .setServiceAccountPrivateKey(key)
-                    .build();
-            service= new Drive.Builder(
-                    AndroidHttp.newCompatibleTransport(),
-                    new GsonFactory(),
-                    credential)
-                    .setApplicationName("my test 1")
-                    .build();
-
-            System.out.println("service account :=========="+service.files().list());
-
-
-
-
-
-
-
-
-
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-
-
         mProgress = new ProgressDialog(this);
         file_name_get = (EditText)findViewById(R.id.file_name_edittext);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("lungs").child(firebaseAuth.getUid());
+        databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("heartRecordings");
-//
-//        prog_bar = (ProgressBar) findViewById(R.id.saving_recording_progress);
-//        prog_bar.setVisibility(View.INVISIBLE);
 
         pause_resume = (Button)findViewById(R.id.pause_resume_heart_record_button);
         Brecord_heart = (Button)findViewById(R.id.record_heart_button);
@@ -232,77 +173,6 @@ public class Heart extends AppCompatActivity implements
                 graphView.showFullGraph(samples);
             }
         }
-        requestSignin();
-
-
-    }
-
-
-
-
-    //for drive
-
-    private void requestSignin() {
-
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestScopes(new Scope(DriveScopes.DRIVE_FILE ))
-                .build();
-        GoogleSignInClient client = GoogleSignIn.getClient(this,signInOptions);
-        startActivityForResult(client.getSignInIntent(),1);
-
-
-
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode){
-
-            case 1:
-                if (resultCode==RESULT_OK){
-
-                    handleSignInIntent(data);
-                }
-
-                break;
-        }
-    }
-
-    private void handleSignInIntent(Intent data) {
-
-        GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
-            @Override
-            public void onSuccess(GoogleSignInAccount googleSignInAccount) {
-
-                GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(Heart.this, Collections.singleton((DriveScopes.DRIVE_FILE)));
-                credential.setSelectedAccount(googleSignInAccount.getAccount());
-
-                Drive googleDriveServices = new Drive.Builder(
-                        AndroidHttp.newCompatibleTransport(),
-                        new GsonFactory(),
-                        credential)
-                        .setApplicationName("my test 1")
-                        .build();
-
-                driveServiceHelper = new DriveServiceHelper(googleDriveServices);
-
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-
-    }
-
-    public void uploadData(View view){
-
 
 
 
@@ -344,6 +214,7 @@ public class Heart extends AppCompatActivity implements
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void pause_resume_heart(View view) {
 
         if (!is_paused){
@@ -398,7 +269,6 @@ public class Heart extends AppCompatActivity implements
                         System.out.println("from test address "+address);
                         System.out.println("path form test"+file+"/" + file_name_get.getText()+".mp3");
                         String path  =file+"/" + file_name_get.getText()+".mp3";
-                        driveServiceHelper.createfile(path,file_name_get.getText()+"("+address+")"+".mp3");
                         System.out.println("name on drive "+file_name_get.getText()+"("+address+")"+".mp3");
                         Intent showResult = new Intent(Heart.this,Result.class);
                         showResult.putExtra("displayname",displayname);
@@ -410,23 +280,6 @@ public class Heart extends AppCompatActivity implements
                 });
             }
         });
-
-        //                        //for drive
-//                        String path  =file+"/" + file_name_get.getText()+".mp3";
-//                        driveServiceHelper.createfile(path,file_name_get.getText()+"("+address+")"+".mp3").addOnSuccessListener(new OnSuccessListener<String>() {
-//                            @Override
-//                            public void onSuccess(String s) {
-//                                System.out.println("uploaded to drive");
-//                            }
-//                        }).addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                System.out.println("not uploaded to drive");
-//
-//                            }
-//                        });
-
-
 
     }
 

@@ -83,6 +83,7 @@ public class VoiceRecorder {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public List pauseRecording() {
         this.stop = true;
         mRecordingThread.interrupt();
@@ -90,10 +91,12 @@ public class VoiceRecorder {
             graphView.pause();
         }
         myAudioRecorder.pause();
+//        myAudioRecorder.st
         return pointList;
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void continueRecording() {
         this.stop = false;
         myAudioRecorder.resume();

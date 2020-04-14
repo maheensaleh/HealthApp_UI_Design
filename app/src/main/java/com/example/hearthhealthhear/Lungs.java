@@ -2,6 +2,7 @@ package com.example.hearthhealthhear;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -97,6 +98,7 @@ public class Lungs extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lungs);
+        initialize_gps();
 
         mProgress = new ProgressDialog(this);
         file_name_get = (EditText)findViewById(R.id.file_name_edittext);
@@ -106,9 +108,7 @@ public class Lungs extends AppCompatActivity implements
         databaseReference = firebaseDatabase.getReference("lungs").child(firebaseAuth.getUid());
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("lungsRecordings");
-//
-//        prog_bar = (ProgressBar) findViewById(R.id.saving_recording_progress);
-//        prog_bar.setVisibility(View.INVISIBLE);
+
 
         pause_resume = (Button)findViewById(R.id.pause_resume_lung_record_button);
         Brecord_heart = (Button)findViewById(R.id.record_lungs_button);
@@ -180,6 +180,7 @@ public class Lungs extends AppCompatActivity implements
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void pause_resume_lung(View view) {
 
         if (!is_paused){
@@ -212,7 +213,6 @@ public class Lungs extends AppCompatActivity implements
 
     public void test_lung(View view) {
 
-        initialize_gps();
         mProgress.setMessage("Saving audio");
         mProgress.show();
         final Uri path ;
@@ -227,6 +227,8 @@ public class Lungs extends AppCompatActivity implements
                 audio_ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        System.out.println("assresss"+address);
+                        System.out.println("uri "+uri.toString());
                         recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),address.toString());
                         Toast.makeText(Lungs.this, "Recording saved !", Toast.LENGTH_SHORT).show();
                         databaseReference.push().setValue(for_database);
