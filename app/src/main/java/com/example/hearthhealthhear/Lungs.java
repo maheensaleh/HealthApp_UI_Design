@@ -38,8 +38,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+//import com.android.volley.VolleyError;
+//import com.android.volley.toolbox.StringRequest;
+import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -499,8 +500,7 @@ public class Lungs extends AppCompatActivity implements
         final String location = flocation;
 
 
-
-
+//        StringRequest
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbwyU20DHEU9nZ1Ek-rt_Vo09gt26YmoCVhPF809bHqoz92jLwQ/exec",
                 new Response.Listener<String>() {
                     @Override
@@ -516,11 +516,8 @@ public class Lungs extends AppCompatActivity implements
 
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                error -> {
 
-                    }
                 }
         ) {
             @Override

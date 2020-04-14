@@ -14,7 +14,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -29,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,36 +37,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+//import com.android.volley.VolleyError;
+import com.android.volley.request.SimpleMultiPartRequest;
+import com.android.volley.request.StringRequest;
+//import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -78,12 +58,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -109,6 +83,8 @@ public class Heart extends AppCompatActivity implements
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference heartAll;
+    private DatabaseReference heartAll_tmp;
+
 
     //for current location
     LocationRequest mLocationRequest;
@@ -133,6 +109,8 @@ public class Heart extends AppCompatActivity implements
     private boolean is_paused = false;
     private Button pause_resume,Brecord_heart,Bstop_heart,Btest_heart;
     File file;
+    Uri recording_uri;
+
 
 
     @Override
@@ -149,6 +127,7 @@ public class Heart extends AppCompatActivity implements
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
         heartAll = firebaseDatabase.getReference("heartAll");
+        heartAll_tmp = firebaseDatabase.getReference("heartAll_tmp");
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("heartRecordings");
 
@@ -249,13 +228,13 @@ public class Heart extends AppCompatActivity implements
 
 
     public void stop_heart(View view) {
-            graphView.stopPlotting();
-            samples = recorder.stopRecording();
-            graphView.showFullGraph(samples);
-            Brecord_heart.setEnabled(true);
-            Bstop_heart.setEnabled(false);
-            pause_resume.setEnabled(false);
-            Btest_heart.setEnabled(true);
+        graphView.stopPlotting();
+        samples = recorder.stopRecording();
+        graphView.showFullGraph(samples);
+        Brecord_heart.setEnabled(true);
+        Bstop_heart.setEnabled(false);
+        pause_resume.setEnabled(false);
+        Btest_heart.setEnabled(true);
     }
 
 
@@ -266,7 +245,7 @@ public class Heart extends AppCompatActivity implements
         final Uri path ;
 
         Toast.makeText(Heart.this, "testing heart for diseasse...", Toast.LENGTH_SHORT).show();
-        Uri recording_uri = recorder.get_recording_uri();
+        recording_uri = recorder.get_recording_uri();
         System.out.println("path is   " + recording_uri);
         final StorageReference audio_ref = storageReference.child(recording_uri.getLastPathSegment());
         audio_ref.putFile(recording_uri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -280,6 +259,7 @@ public class Heart extends AppCompatActivity implements
                         Toast.makeText(Heart.this, "Recording saved !", Toast.LENGTH_SHORT).show();
                         databaseReference.push().setValue(for_database);
                         heartAll.push().setValue(for_database);
+                        heartAll_tmp.push().setValue(for_database);
                         addItemToSheet(file_name_get.getText().toString(),address.toString());
                         mProgress.dismiss();
                         System.out.println("from test address "+address);
@@ -534,6 +514,30 @@ public class Heart extends AppCompatActivity implements
 
     ///// api google sheet
 
+    public  void addaudio(String uri){
+//        SimpleMultiPartRequest
+        SimpleMultiPartRequest simpleMultiPartRequest = new SimpleMultiPartRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbzNOMXA_Us8VEuxdz6DGX1dOAEySK-nJFDU-CZ1B0hAlppGnDRq/exec",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("listenong....");
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(com.android.volley.error.VolleyError error) {
+                System.out.println("not listenong erroe -----");
+            }
+        });
+        simpleMultiPartRequest.addFile("audio1",recording_uri.toString());
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        queue.add(simpleMultiPartRequest);
+
+//        MyApplication
+    }
+
     //This is the part where data is transafeered from Your Android phone to Sheet by using HTTP Rest API calls
 
     private void   addItemToSheet(String fname, String flocation) {
@@ -542,7 +546,7 @@ public class Heart extends AppCompatActivity implements
         final String location = flocation;
 
 
-
+//        StringRequest
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "        https://script.google.com/macros/s/AKfycbyG68A5JolNEXFiG3ebHfZHVLcm20jFwIUZ4USRT8FFYvnz0-kZ/exec",
                 new Response.Listener<String>() {
                     @Override
@@ -557,11 +561,8 @@ public class Heart extends AppCompatActivity implements
 
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                error -> {
 
-                    }
                 }
         ) {
             @Override
