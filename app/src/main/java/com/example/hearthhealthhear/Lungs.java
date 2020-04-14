@@ -80,6 +80,7 @@ public class Lungs extends AppCompatActivity implements
     Location mLastLocation;
     List<Address> address;
     LatLng latLng;
+    Boolean gotlocation = false;
 
 
 
@@ -89,6 +90,8 @@ public class Lungs extends AppCompatActivity implements
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference lungsAll;
+    private DatabaseReference lungsAll_tmp;
 
 
     //for heart recording and wave
@@ -117,6 +120,9 @@ public class Lungs extends AppCompatActivity implements
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("lungs").child(firebaseAuth.getUid());
+        lungsAll = firebaseDatabase.getReference("lungsAll");
+        lungsAll_tmp = firebaseDatabase.getReference("lungsAll_tmp");
+
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("lungsRecordings");
 
@@ -238,14 +244,13 @@ public class Lungs extends AppCompatActivity implements
                 audio_ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        System.out.println("assresss"+address);
-                        System.out.println("uri "+uri.toString());
+
                         recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),address.toString());
                         Toast.makeText(Lungs.this, "Recording saved !", Toast.LENGTH_SHORT).show();
                         databaseReference.push().setValue(for_database);
-                        mProgress.dismiss();
-                        addItemToSheet(file_name_get.getText().toString(),address.toString());
-
+                        lungsAll.push().setValue(for_database);
+                        lungsAll_tmp.push().setValue(for_database);
+                        addItemToSheet(file_name_get.getText().toString(),address.toString(),mProgress);
 
                     }
                 });
@@ -406,14 +411,14 @@ public class Lungs extends AppCompatActivity implements
     @Override
     public void onLocationChanged(Location location) {
 
-
-        mLastLocation = location;
-        //Place current location marker
-        latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        System.out.println("now --------------");
-        getaddr(latLng);
-
-
+        if (!gotlocation) {
+            mLastLocation = location;
+            //Place current location marker
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            System.out.println("now --------------");
+            getaddr(latLng);
+            gotlocation= true;
+        }
 
     }
 
@@ -494,7 +499,7 @@ public class Lungs extends AppCompatActivity implements
 
     //This is the part where data is transafeered from Your Android phone to Sheet by using HTTP Rest API calls
 
-    private void   addItemToSheet(String fname, String flocation) {
+    private void   addItemToSheet(String fname, String flocation,ProgressDialog progressDialog) {
 
         final String filename = fname ;
         final String location = flocation;
@@ -505,7 +510,7 @@ public class Lungs extends AppCompatActivity implements
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        progressDialog.dismiss();
                         Toast.makeText(Lungs.this,response,Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Lungs.this,Result.class);
                         intent.putExtra("displayname",displayname);

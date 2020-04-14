@@ -121,7 +121,6 @@ public class Heart extends AppCompatActivity implements
         initialize_gps();
 
         mProgress = new ProgressDialog(this);
-
         file_name_get = (EditText)findViewById(R.id.file_name_edittext);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -262,15 +261,6 @@ public class Heart extends AppCompatActivity implements
                         heartAll.push().setValue(for_database);
                         heartAll_tmp.push().setValue(for_database);
                         addItemToSheet(file_name_get.getText().toString(),address.toString(),mProgress);
-//                        mProgress.dismiss();
-                        System.out.println("from test address "+address);
-                        System.out.println("path form test"+file+"/" + file_name_get.getText()+".mp3");
-//                        Intent showResult = new Intent(Heart.this,Result.class);
-
-                        //add to sheet
-
-//                        startActivity(showResult);
-//                        finish();
 
                     }
                 });
@@ -548,7 +538,7 @@ public class Heart extends AppCompatActivity implements
 
 
 //        StringRequest
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "        https://script.google.com/macros/s/AKfycbyG68A5JolNEXFiG3ebHfZHVLcm20jFwIUZ4USRT8FFYvnz0-kZ/exec",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbyG68A5JolNEXFiG3ebHfZHVLcm20jFwIUZ4USRT8FFYvnz0-kZ/exec",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

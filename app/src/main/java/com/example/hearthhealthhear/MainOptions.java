@@ -73,12 +73,19 @@ public class MainOptions extends AppCompatActivity implements
     List<String> durls;
     private ProgressDialog mProgress;
     String fold_name;
+    String l_fold_name;
+
 
     FirebaseDatabase firebaseDatabase;
     //heart
     DatabaseReference databaseReference_htmp;
     DatabaseReference databaseReference_h;
     ChildEventListener childEventListener_htmp,childEventListener_h;
+
+    //lungs
+    DatabaseReference databaseReference_ltmp;
+    DatabaseReference databaseReference_l;
+    ChildEventListener childEventListener_ltmp,childEventListener_l;
 
 
 
@@ -91,11 +98,15 @@ public class MainOptions extends AppCompatActivity implements
 
         mProgress = new ProgressDialog(this);
         String fold_name;
+        String l_fold_name;
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         databaseReference_htmp = firebaseDatabase.getReference("heartAll_tmp");
         databaseReference_h = firebaseDatabase.getReference("heartAll");
+
+        databaseReference_ltmp = firebaseDatabase.getReference("lungsAll_tmp");
+        databaseReference_l = firebaseDatabase.getReference("lungsAll");
 
         username = (TextView)findViewById(R.id.user_name);
         username.setText(displayname);
@@ -117,12 +128,12 @@ public class MainOptions extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu1,menu);
 
-        if (current_user.getEmail().equals("salehmaheen@gmail.com") || current_user.getEmail().equals("samarjahan01n1965@gmail.com")){
+        if (current_user.getEmail().equals("salehmaheen@gmail.com")){
+//            inflater.inflate(R.menu.sync,menu);
             inflater.inflate(R.menu.menu_profile,menu);
-            inflater.inflate(R.menu.sync,menu);
         }
+        inflater.inflate(R.menu.menu1,menu);
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -140,16 +151,24 @@ public class MainOptions extends AppCompatActivity implements
             case R.id.dHeart:
                 detach_heart_listenrs();
                 namefolder_h();
-
                 return true;
 
             case R.id.dLungs:
+                detach_heart_listenrs();
+                namefolder_l();
                 return true;
 
             case R.id.sHeart:
                 detach_heart_listenrs();
-
                 syncHeart();
+                return true;
+
+
+            case R.id.sLungs:
+                detach_heart_listenrs();
+                syncLungs();
+                return true;
+
 
 
             default:
@@ -158,6 +177,8 @@ public class MainOptions extends AppCompatActivity implements
     }
 
     private void syncHeart() {
+
+
 
         childEventListener_h = new ChildEventListener() {
             @Override
@@ -191,6 +212,74 @@ public class MainOptions extends AppCompatActivity implements
         mProgress.setMessage("Heart Sync ...");
         mProgress.show();
         databaseReference_h.addChildEventListener(childEventListener_h);
+        databaseReference_h.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()==null){
+                    Toast.makeText(MainOptions.this,"no records ",Toast.LENGTH_SHORT).show();
+                    mProgress.dismiss();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void syncLungs() {
+
+        childEventListener_l = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                recorded_file newdata = dataSnapshot.getValue(recorded_file.class);
+                databaseReference_ltmp.push().setValue(newdata);
+                mProgress.dismiss();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        mProgress.setMessage("Lungs Sync ...");
+        mProgress.show();
+        databaseReference_l.addChildEventListener(childEventListener_l);
+        databaseReference_l.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()==null){
+                    Toast.makeText(MainOptions.this,"no records ",Toast.LENGTH_SHORT).show();
+                    mProgress.dismiss();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
@@ -233,14 +322,39 @@ public class MainOptions extends AppCompatActivity implements
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fold_name = editText.getText().toString();
+                l_fold_name = editText.getText().toString();
                 dialogBuilder.dismiss();
                 Toast.makeText(MainOptions.this,"Your files will be downloaded soon !",Toast.LENGTH_LONG).show();
-                load_data_h(fold_name);
+                load_data_h(l_fold_name);
             }
         });
 
         return fold_name;
+
+    }
+
+    public String namefolder_l() {
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.foldername_layout, null);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+        dialogBuilder.getWindow().setLayout(800, 600);
+
+
+        final EditText editText = (EditText) dialogView.findViewById(R.id.foldername_edittext);
+        Button button1 = (Button) dialogView.findViewById(R.id.foldername_button);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                l_fold_name = editText.getText().toString();
+                dialogBuilder.dismiss();
+                Toast.makeText(MainOptions.this,"Your files will be downloaded soon !",Toast.LENGTH_LONG).show();
+                load_data_l(l_fold_name);
+            }
+        });
+
+        return l_fold_name;
 
     }
 
@@ -287,7 +401,64 @@ public class MainOptions extends AppCompatActivity implements
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue()==null){
-                    Toast.makeText(MainOptions.this,"All data downloaded !",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainOptions.this,"Only new files are downloaded !",Toast.LENGTH_SHORT).show();
+                    mProgress.dismiss();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
+    public void load_data_l(String setname){
+
+
+        Toast.makeText(MainOptions.this,"loading data .....",Toast.LENGTH_SHORT).show();
+        childEventListener_ltmp = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                recorded_file newdata = dataSnapshot.getValue(recorded_file.class);
+                String u = newdata.getFile_path().toString();
+                download_File(MainOptions.this,newdata.getFile_name(),".mp3",DIRECTORY_DOWNLOADS+"/LUNGS/"+setname+"/",u);
+                databaseReference_ltmp.child(dataSnapshot.getKey()).setValue(null);
+                mProgress.dismiss();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        mProgress.setMessage("Loading records ...");
+        mProgress.show();
+        databaseReference_ltmp.addChildEventListener(childEventListener_ltmp);
+        databaseReference_ltmp.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()==null){
+                    Toast.makeText(MainOptions.this,"Only new files are downloaded !",Toast.LENGTH_SHORT).show();
                     mProgress.dismiss();
                 }
 
@@ -323,11 +494,15 @@ public class MainOptions extends AppCompatActivity implements
         super.onResume();
         mProgress = new ProgressDialog(this);
         String fold_name;
+        String l_fold_name;
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         databaseReference_htmp = firebaseDatabase.getReference("heartAll_tmp");
         databaseReference_h = firebaseDatabase.getReference("heartAll");
+
+        databaseReference_ltmp = firebaseDatabase.getReference("lungsAll_tmp");
+        databaseReference_l = firebaseDatabase.getReference("lungsAll");
 
         username = (TextView)findViewById(R.id.user_name);
         username.setText(displayname);
@@ -335,8 +510,7 @@ public class MainOptions extends AppCompatActivity implements
         heart_button.setText("heart");
         firebaseAuth = FirebaseAuth.getInstance();
         current_user = firebaseAuth.getCurrentUser();
-        current_user_name = current_user.getDisplayName();    }
-
+        current_user_name = current_user.getDisplayName();}
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
@@ -360,6 +534,16 @@ public class MainOptions extends AppCompatActivity implements
         if (childEventListener_htmp!=null) {
             databaseReference_htmp.removeEventListener(childEventListener_htmp);
             childEventListener_htmp=null;
+        }
+
+        if (childEventListener_l!=null) {
+            databaseReference_l.removeEventListener(childEventListener_l);
+            childEventListener_l=null;
+        }
+
+        if (childEventListener_ltmp!=null) {
+            databaseReference_ltmp.removeEventListener(childEventListener_ltmp);
+            childEventListener_ltmp=null;
         }
     }
 }
