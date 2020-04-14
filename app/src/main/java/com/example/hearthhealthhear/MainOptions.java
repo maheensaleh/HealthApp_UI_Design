@@ -2,6 +2,7 @@ package com.example.hearthhealthhear;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -69,6 +72,10 @@ public class MainOptions extends AppCompatActivity implements
     List<String> durls;
     private ProgressDialog mProgress;
     Button dbutton;
+    String fold_name;
+    ChildEventListener childEventListener;
+
+
 
 
     FirebaseDatabase firebaseDatabase;
@@ -84,13 +91,14 @@ public class MainOptions extends AppCompatActivity implements
         setSupportActionBar(mytoolbar);
 
         mProgress = new ProgressDialog(this);
-        dbutton = (Button)findViewById(R.id.getdata);
-        dbutton.setVisibility(View.VISIBLE);
 
+
+        String fold_name;
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+        databaseReference = firebaseDatabase.getReference("heartAll");
 
+        int cc;
 
 //
         username = (TextView)findViewById(R.id.user_name);
@@ -105,11 +113,7 @@ public class MainOptions extends AppCompatActivity implements
         System.out.println("000000000000000000000000000000000");
         System.out.println("usernae is "+current_user_name);
         System.out.println("email is "+current_user.getEmail());
-        if (current_user.getEmail().equals("salehmaheen@gmail.com") || current_user.getEmail().equals("samarjahan01n1965@gmail.com")){
-            dbutton.setVisibility(View.VISIBLE);
-//            requestSignin();
 
-        }
 
         File exiting = getExternalFilesDir(DIRECTORY_DOWNLOADS);
         existing = new ArrayList<>();
@@ -175,8 +179,10 @@ public class MainOptions extends AppCompatActivity implements
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu1,menu);
-        return super.onCreateOptionsMenu(menu);
 
+        if (current_user.getEmail().equals("salehmaheen@gmail.com") || current_user.getEmail().equals("samarjahan01n1965@gmail.com")){
+            inflater.inflate(R.menu.menu_profile,menu);}
+        return super.onCreateOptionsMenu(menu);
 
     }
 
@@ -189,6 +195,15 @@ public class MainOptions extends AppCompatActivity implements
                 Intent tosignin  = new Intent(MainOptions.this, Signin.class);
                 Toast.makeText(MainOptions.this, "logging out", Toast.LENGTH_SHORT).show();
                 startActivity(tosignin);
+                return true;
+            case R.id.dHeart:
+
+                namefolder();
+                return true;
+
+            case R.id.dLungs:
+                return true;
+
             default:
                 return super.onContextItemSelected(item);
         }
@@ -218,45 +233,69 @@ public class MainOptions extends AppCompatActivity implements
         startActivity(intenttoabout);
     }
 
-    public void getdata(View view) {
+    public String namefolder() {
 
-//        File exiting = getExternalFilesDir(DIRECTORY_DOWNLOADS+"/health/");
-//        System.out.println("exiting ++++"+exiting.listFiles());
-//        for (int i= 0 ;i<exiting.listFiles().length;i++){
-//
-//            System.out.println(i+" "+exiting.listFiles()[i]);
-//
-//        }
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.foldername_layout, null);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+        dialogBuilder.getWindow().setLayout(800, 600);
+
+
+        final EditText editText = (EditText) dialogView.findViewById(R.id.foldername_edittext);
+        Button button1 = (Button) dialogView.findViewById(R.id.foldername_button);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fold_name = editText.getText().toString();
+                dialogBuilder.dismiss();
+                Toast.makeText(MainOptions.this,"Your files will be downloaded soon !",Toast.LENGTH_LONG).show();
+                load_data(fold_name);
+
+
+            }
+        });
+
+        return fold_name;
+
+    }
+
+    public void getdata(View v){
+    }
+
+
+
+
+    public void load_data(String setname){
 
 
         Toast.makeText(MainOptions.this,"loading data .....",Toast.LENGTH_SHORT).show();
-//        ArrayAdapter<recorded_file> heart_history;
-//        heart_history= new ArrayList<recorded_file>();
-        durls =new ArrayList<>();
-//        adapter = new heart_adapter(this,R.layout.heart_listview,heart_history);
-//        mylistview = (ListView)findViewById(R.id.heart_history_listview) ;
-//        mylistview.setAdapter(adapter);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("lungs").child(firebaseAuth.getUid());
-        ChildEventListener childEventListener;
+        durls =new ArrayList<>();
+
+
+
+
+
         childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 recorded_file newdata = dataSnapshot.getValue(recorded_file.class);
+                System.out.println("new data "+newdata.getFile_name());
 //                String some = newdata.getAddress();
 //                tester.setText("Address "+some);
+
                 durls.add(newdata.getFile_path());
                 String u = newdata.getFile_path().toString();
-//                driveServiceHelper.createfile(newdata.getFile_path(),newdata.getFile_name());
                 if (!existing.contains(newdata.getFile_name()+".mp3")){
                     System.out.println("yessssss");
                     System.out.println("boolena "+existing.contains(newdata.getFile_name()+".mp3"));
                     System.out.println("filename "+newdata.getFile_name());
                     System.out.println("downloading this "+newdata.getFile_name());
-                    download_File(MainOptions.this,newdata.getFile_name(),".mp3",DIRECTORY_DOWNLOADS+"/health1/",u);
+                    download_File(MainOptions.this,newdata.getFile_name(),".mp3",DIRECTORY_DOWNLOADS+"/"+setname+"/",u);
                     existing.add(newdata.getFile_name()+".mp3");
+
                 }
                 System.out.println("running");
 
@@ -335,5 +374,14 @@ public class MainOptions extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (childEventListener!=null) {
+            databaseReference.removeEventListener(childEventListener);
+            childEventListener=null;
+        }
     }
 }

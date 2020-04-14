@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/foldername_textview"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:textAlignment="center"
+        android:paddingTop="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:text="Folder name : "
+        android:textColor="@color/blue"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/foldername_edittext"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="3dp"
+        android:textColor="@color/blue"
+        android:textSize="15dp"
+        android:textStyle="italic" />
+
+
+
+        <Button
+            android:id="@+id/foldername_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@color/blue"
+            android:text="Save"
+            android:layout_marginLeft="70dp"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+
+</LinearLayout>

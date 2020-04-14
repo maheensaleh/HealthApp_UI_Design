@@ -108,6 +108,7 @@ public class Heart extends AppCompatActivity implements
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference heartAll;
 
     //for current location
     LocationRequest mLocationRequest;
@@ -115,6 +116,7 @@ public class Heart extends AppCompatActivity implements
     Location mLastLocation;
     List<Address> address;
     LatLng latLng;
+    Boolean gotlocation = false;
 
 
 
@@ -146,6 +148,7 @@ public class Heart extends AppCompatActivity implements
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+        heartAll = firebaseDatabase.getReference("heartAll");
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("heartRecordings");
 
@@ -276,13 +279,14 @@ public class Heart extends AppCompatActivity implements
                         recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),address.toString());
                         Toast.makeText(Heart.this, "Recording saved !", Toast.LENGTH_SHORT).show();
                         databaseReference.push().setValue(for_database);
+                        heartAll.push().setValue(for_database);
+                        addItemToSheet(file_name_get.getText().toString(),address.toString());
                         mProgress.dismiss();
                         System.out.println("from test address "+address);
                         System.out.println("path form test"+file+"/" + file_name_get.getText()+".mp3");
 //                        Intent showResult = new Intent(Heart.this,Result.class);
 
                         //add to sheet
-                        addItemToSheet(file_name_get.getText().toString(),address.toString());
 
 //                        startActivity(showResult);
 //                        finish();
@@ -443,13 +447,14 @@ public class Heart extends AppCompatActivity implements
     @Override
     public void onLocationChanged(Location location) {
 
-
-        mLastLocation = location;
-        //Place current location marker
-        latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        System.out.println("now --------------");
-        getaddr(latLng);
-
+        if (!gotlocation) {
+            mLastLocation = location;
+            //Place current location marker
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            System.out.println("now --------------");
+            getaddr(latLng);
+            gotlocation= true;
+        }
 
 
     }
