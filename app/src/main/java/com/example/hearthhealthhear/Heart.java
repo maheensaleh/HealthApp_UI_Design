@@ -34,6 +34,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anand.brose.graphviewlibrary.GraphView;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -76,8 +84,10 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class Heart extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -130,6 +140,7 @@ public class Heart extends AppCompatActivity implements
         initialize_gps();
 
         mProgress = new ProgressDialog(this);
+
         file_name_get = (EditText)findViewById(R.id.file_name_edittext);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -268,13 +279,13 @@ public class Heart extends AppCompatActivity implements
                         mProgress.dismiss();
                         System.out.println("from test address "+address);
                         System.out.println("path form test"+file+"/" + file_name_get.getText()+".mp3");
-                        String path  =file+"/" + file_name_get.getText()+".mp3";
-                        System.out.println("name on drive "+file_name_get.getText()+"("+address+")"+".mp3");
-                        Intent showResult = new Intent(Heart.this,Result.class);
-                        showResult.putExtra("displayname",displayname);
+//                        Intent showResult = new Intent(Heart.this,Result.class);
 
-                        startActivity(showResult);
-                        finish();
+                        //add to sheet
+                        addItemToSheet(file_name_get.getText().toString(),address.toString());
+
+//                        startActivity(showResult);
+//                        finish();
 
                     }
                 });
@@ -514,5 +525,62 @@ public class Heart extends AppCompatActivity implements
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    ///// api google sheet
+
+    //This is the part where data is transafeered from Your Android phone to Sheet by using HTTP Rest API calls
+
+    private void   addItemToSheet(String fname, String flocation) {
+
+        final String filename = fname ;
+        final String location = flocation;
+
+
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbyG68A5JolNEXFiG3ebHfZHVLcm20jFwIUZ4USRT8FFYvnz0-kZ/exec",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Toast.makeText(Heart.this,response,Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(Heart.this,Result.class);
+                        startActivity(intent);
+                        intent.putExtra("displayname",displayname);
+                        finish();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> parmas = new HashMap<>();
+
+                //here we pass params
+                parmas.put("action","addItem");
+                parmas.put("filename",filename);
+                parmas.put("location",location);
+
+                return parmas;
+            }
+        };
+
+        int socketTimeOut = 50000;// u can change this .. here it is 50 seconds
+
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(retryPolicy);
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        queue.add(stringRequest);
+
+
     }
 }
