@@ -42,7 +42,7 @@ public class HistorySingleEntry extends AppCompatActivity {
     Boolean isstop  = true;
     Intent gomain ;
     private FirebaseDatabase firebaseDatabase ;
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference,All,tmp;
 
 
 
@@ -83,13 +83,15 @@ public class HistorySingleEntry extends AppCompatActivity {
 
 
         if (type.equals("heart")){
-            databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());}
+            databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+            All = firebaseDatabase.getReference("heartAll");
+            tmp = firebaseDatabase.getReference("heartAll_tmp").child(firebaseAuth.getUid());}
+
         else{
-            databaseReference = firebaseDatabase.getReference("lungs").child(firebaseAuth.getUid());}
-
-//
-
-    }
+            databaseReference = firebaseDatabase.getReference("lungs").child(firebaseAuth.getUid());
+            All = firebaseDatabase.getReference("lungsAll");
+            tmp = firebaseDatabase.getReference("lungsAll_tmp").child(firebaseAuth.getUid());
+        }}
 
 
     // for option menus
@@ -186,6 +188,7 @@ public class HistorySingleEntry extends AppCompatActivity {
                 String newname = editText.getText().toString();
 
                 recorded_file edited = new recorded_file(newname,filePath,address);
+
                 databaseReference.child(key).setValue(edited);
                 dialogBuilder.dismiss();
                 recordfile_name.setText(newname);

@@ -36,10 +36,10 @@ public class HeartHistroy extends AppCompatActivity {
     String displayname;
     TextView username;
     private Toolbar mytoolbar;
-    private List<String> keys;
+    private List<String> keys,AllKeys,tmpkeys;
 
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference,hAll,htmp;
     private FirebaseAuth firebaseAuth;
 
     private ChildEventListener childEventListener;
@@ -61,6 +61,8 @@ public class HeartHistroy extends AppCompatActivity {
         setSupportActionBar(mytoolbar);
 //
         username = (TextView)findViewById(R.id.user_name);
+        AllKeys = new ArrayList<>();
+        tmpkeys = new ArrayList<>();
 
         final Intent getdisplayname = getIntent();
         displayname = getdisplayname.getStringExtra("username");
@@ -108,6 +110,8 @@ public class HeartHistroy extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
+        hAll = firebaseDatabase.getReference("heartAll");
+        htmp = firebaseDatabase.getReference("heartAll_tmp");
         childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -118,6 +122,7 @@ public class HeartHistroy extends AppCompatActivity {
                 adapter.add(newdata);
                 dataSnapshot.getKey();
                 mProgress.dismiss();
+
             }
 
             @Override
@@ -160,6 +165,67 @@ public class HeartHistroy extends AppCompatActivity {
             }
         });
 
+//        hAll.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                AllKeys.add(dataSnapshot.getKey());
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        htmp.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                tmpkeys.add(dataSnapshot.getKey());
+//                mProgress.dismiss();
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
+
 
         mylistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -171,6 +237,8 @@ public class HeartHistroy extends AppCompatActivity {
                 goto_thisrecord.putExtra("address", heart_history.get(i).addr.toString());
                 goto_thisrecord.putExtra("username",displayname);
                 goto_thisrecord.putExtra("key",keys.get(i));
+                goto_thisrecord.putExtra("Allkey",AllKeys.get(i));
+                goto_thisrecord.putExtra("tmpkey",tmpkeys.get(i));
                 goto_thisrecord.putExtra("type","heart");
                 System.out.println("sending " + heart_history.get(i)  );
                 resume_status = true;
