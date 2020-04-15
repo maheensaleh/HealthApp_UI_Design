@@ -213,7 +213,7 @@ public class VoiceRecorder {
                         Thread.sleep(150);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                 }
+                    }
                 }
             }
         });

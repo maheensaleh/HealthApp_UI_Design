@@ -205,6 +205,8 @@ public class Lungs extends AppCompatActivity implements
             Toast.makeText(Lungs.this,"Recording Paused !",Toast.LENGTH_SHORT);
             recorder.pauseRecording();// to pause recording
             pause_resume.setText("resume");
+            Bstop_heart.setEnabled(false);
+
         }
 
         else{
@@ -212,6 +214,8 @@ public class Lungs extends AppCompatActivity implements
             Toast.makeText(Lungs.this,"Recording Resumed !",Toast.LENGTH_SHORT);
             recorder.continueRecording();//to resume recording
             pause_resume.setText("pause");
+            Bstop_heart.setEnabled(true);
+
         }
 
     }

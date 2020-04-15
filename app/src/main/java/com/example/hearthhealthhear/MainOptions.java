@@ -129,7 +129,7 @@ public class MainOptions extends AppCompatActivity implements
 
         MenuInflater inflater = getMenuInflater();
 
-        if (current_user.getEmail().equals("salehmaheen@gmail.com")){
+        if (current_user.getEmail().equals("salehmaheen@gmail.com") || current_user.getEmail().equals("uazch902@gmail.com")){
 //            inflater.inflate(R.menu.sync,menu);
             inflater.inflate(R.menu.menu_profile,menu);
         }

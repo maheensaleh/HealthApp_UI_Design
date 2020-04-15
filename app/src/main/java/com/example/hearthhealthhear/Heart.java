@@ -215,6 +215,7 @@ public class Heart extends AppCompatActivity implements
             Toast.makeText(Heart.this,"Recording Paused !",Toast.LENGTH_SHORT);
             recorder.pauseRecording();// to pause recording
             pause_resume.setText("resume");
+            Bstop_heart.setEnabled(false);
         }
 
         else{
@@ -222,6 +223,7 @@ public class Heart extends AppCompatActivity implements
             Toast.makeText(Heart.this,"Recording Resumed !",Toast.LENGTH_SHORT);
             recorder.continueRecording();//to resume recording
             pause_resume.setText("pause");
+            Bstop_heart.setEnabled(true);
         }
 
     }
