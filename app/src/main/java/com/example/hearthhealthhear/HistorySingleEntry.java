@@ -85,12 +85,12 @@ public class HistorySingleEntry extends AppCompatActivity {
         if (type.equals("heart")){
             databaseReference = firebaseDatabase.getReference("heart").child(firebaseAuth.getUid());
             All = firebaseDatabase.getReference("heartAll");
-            tmp = firebaseDatabase.getReference("heartAll_tmp").child(firebaseAuth.getUid());}
+            tmp = firebaseDatabase.getReference("heartAll_tmp");}
 
         else{
             databaseReference = firebaseDatabase.getReference("lungs").child(firebaseAuth.getUid());
             All = firebaseDatabase.getReference("lungsAll");
-            tmp = firebaseDatabase.getReference("lungsAll_tmp").child(firebaseAuth.getUid());
+            tmp = firebaseDatabase.getReference("lungsAll_tmp");
         }}
 
 
@@ -190,6 +190,8 @@ public class HistorySingleEntry extends AppCompatActivity {
                 recorded_file edited = new recorded_file(newname,filePath,address);
 
                 databaseReference.child(key).setValue(edited);
+                All.child(key).setValue(edited);
+                tmp.child(key).setValue(edited);
                 dialogBuilder.dismiss();
                 recordfile_name.setText(newname);
                 gomain  = new Intent(HistorySingleEntry.this,MainOptions.class);
@@ -205,6 +207,8 @@ public class HistorySingleEntry extends AppCompatActivity {
 
 
         databaseReference.child(key).setValue(null);
+        All.child(key).setValue(null);
+        tmp.child(key).setValue(null);
         Intent gomain = new Intent(HistorySingleEntry.this,MainOptions.class);
         startActivity(gomain);
         finish();

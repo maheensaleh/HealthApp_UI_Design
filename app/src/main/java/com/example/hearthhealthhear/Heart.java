@@ -257,9 +257,12 @@ public class Heart extends AppCompatActivity implements
 
                         recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),address.toString());
                         Toast.makeText(Heart.this, "Recording saved !", Toast.LENGTH_SHORT).show();
-                        databaseReference.push().setValue(for_database);
-                        heartAll.push().setValue(for_database);
-                        heartAll_tmp.push().setValue(for_database);
+//                        databaseReference.push().setValue(for_database);
+                        String k = databaseReference.push().getKey();
+                        System.out.println("key is "+k);
+                        databaseReference.child(k).setValue(for_database);
+                        heartAll.child(k).setValue(for_database);
+                        heartAll_tmp.child(k).setValue(for_database);
                         addItemToSheet(file_name_get.getText().toString(),address.toString(),mProgress);
 
                     }

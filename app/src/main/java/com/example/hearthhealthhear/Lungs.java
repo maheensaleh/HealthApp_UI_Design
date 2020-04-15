@@ -247,9 +247,11 @@ public class Lungs extends AppCompatActivity implements
 
                         recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),address.toString());
                         Toast.makeText(Lungs.this, "Recording saved !", Toast.LENGTH_SHORT).show();
-                        databaseReference.push().setValue(for_database);
-                        lungsAll.push().setValue(for_database);
-                        lungsAll_tmp.push().setValue(for_database);
+                        String k = databaseReference.push().getKey();
+                        System.out.println("key is "+k);
+                        databaseReference.child(k).setValue(for_database);
+                        lungsAll.child(k).setValue(for_database);
+                        lungsAll_tmp.child(k).setValue(for_database);
                         addItemToSheet(file_name_get.getText().toString(),address.toString(),mProgress);
 
                     }
