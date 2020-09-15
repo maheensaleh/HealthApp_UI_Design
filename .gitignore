@@ -13,4 +13,4 @@
 .externalNativeBuild
 .cxx
 /app/google-services.json
-/app/src/main/res/values/scripts_n_maps_key.xml
+/app/src/main/res/values/keys_script_url.xml
