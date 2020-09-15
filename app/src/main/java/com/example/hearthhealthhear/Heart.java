@@ -59,6 +59,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -74,7 +78,7 @@ public class Heart extends AppCompatActivity implements
     String displayname;
     private ProgressDialog mProgress;
     EditText file_name_get;
-
+    String edit_box_name = null;
 
 
     //for firebase
@@ -178,16 +182,19 @@ public class Heart extends AppCompatActivity implements
 
     public void record_heart(View view) {
 
-        if (file_name_get.getText().equals("Recording name")) {
-            Toast.makeText(Heart.this, "Enter recording name to proceed", Toast.LENGTH_SHORT).show();
-        } else {
+      if (file_name_get.getText().toString().trim().equals("")) {
+        Toast.makeText(Heart.this, "Enter recording name to proceed", Toast.LENGTH_SHORT).show();
+      } else {
+            System.out.println("filename-----------"+file_name_get.getText().toString());
+            edit_box_name = file_name_get.getText().toString();
             Toast.makeText(Heart.this, "recording audio", Toast.LENGTH_SHORT).show();
             if (checkRecordPermission() && checkStoragePermission()) {
 
                 graphView.reset();
                 String filepath = Environment.getExternalStorageDirectory().getPath();
                 file = new File(filepath, OUTPUT_DIRECTORY);
-                recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + file_name_get.getText()+".mp3");
+                Date ctime  = (Date) Calendar.getInstance().getTime();
+                recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + file_name_get.getText()+"_"+ctime+".mp4");
                 if (!file.exists()) {
                     file.mkdirs();
                 }
@@ -196,7 +203,6 @@ public class Heart extends AppCompatActivity implements
                 Brecord_heart.setEnabled(false);
                 Bstop_heart.setEnabled(true);
                 pause_resume.setEnabled(true);
-                System.out.println("this fil epath is "+file+"/" + file_name_get.getText()+".mp3");
 
 
             } else {
@@ -256,8 +262,15 @@ public class Heart extends AppCompatActivity implements
                 audio_ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-
-                        recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),address.toString());
+                      System.out.println("uri to "+uri.toString());
+                      String addr = "";
+                      try{
+                          addr =  address.toString();
+                      }
+                      catch (Exception e){
+                        addr = "not permitted bu user";
+                      }
+                      recorded_file for_database = new recorded_file(edit_box_name,uri.toString(),addr);
                         Toast.makeText(Heart.this, "Recording saved !", Toast.LENGTH_SHORT).show();
 //                        databaseReference.push().setValue(for_database);
                         String k = databaseReference.push().getKey();
@@ -265,7 +278,13 @@ public class Heart extends AppCompatActivity implements
                         databaseReference.child(k).setValue(for_database);
                         heartAll.child(k).setValue(for_database);
                         heartAll_tmp.child(k).setValue(for_database);
-                        addItemToSheet(file_name_get.getText().toString(),address.toString(),mProgress);
+                        addItemToSheet(file_name_get.getText().toString(),addr,uri.toString(),mProgress);
+                        mProgress.dismiss();
+                        Intent intent = new Intent(Heart.this,Result.class);
+                        intent.putExtra("displayname",displayname);
+
+                        startActivity(intent);
+                        finish();
 
                     }
                 });
@@ -536,24 +555,16 @@ public class Heart extends AppCompatActivity implements
 
     //This is the part where data is transafeered from Your Android phone to Sheet by using HTTP Rest API calls
 
-    private void   addItemToSheet(String fname, String flocation, ProgressDialog progressDialog) {
+    private void   addItemToSheet(String fname, String flocation,String download_link, ProgressDialog progressDialog) {
 
         final String filename = fname ;
         final String location = flocation;
+        final String d_link = download_link;
 
-
-//        StringRequest
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbyG68A5JolNEXFiG3ebHfZHVLcm20jFwIUZ4USRT8FFYvnz0-kZ/exec",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbzFFORSLRBKXJuNogoOdcaFZ95N3sg0Nix8Ut-IGeZbO68aroo/exec",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        Toast.makeText(Heart.this,response,Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(Heart.this,Result.class);
-                        intent.putExtra("displayname",displayname);
-
-                        startActivity(intent);
-                        finish();
 
                     }
                 },
@@ -569,8 +580,10 @@ public class Heart extends AppCompatActivity implements
                 parmas.put("action","addItem");
                 parmas.put("filename",filename);
                 parmas.put("location",location);
+                parmas.put("download_link",d_link);
+                System.out.println("sending d link"+d_link);
 
-                return parmas;
+              return parmas;
             }
         };
 
@@ -585,4 +598,6 @@ public class Heart extends AppCompatActivity implements
 
 
     }
+
+
 }

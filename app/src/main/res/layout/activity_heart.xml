@@ -76,13 +76,13 @@
         app:layout_constraintVertical_bias="0.055"></com.anand.brose.graphviewlibrary.GraphView>
 
     <EditText
+
         android:id="@+id/file_name_edittext"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"
         android:hint="Enter recording name"
         android:padding="3dp"
-        android:text="Recording name"
         android:textColor="@color/blue"
         android:textColorHint="@color/blue"
         android:textSize="15dp"

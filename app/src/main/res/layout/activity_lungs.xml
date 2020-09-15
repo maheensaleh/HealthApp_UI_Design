@@ -82,7 +82,6 @@
         android:layout_marginLeft="20dp"
         android:hint="Enter recording name"
         android:padding="3dp"
-        android:text="Recording name"
         android:textColor="@color/blue"
         android:textColorHint="@color/blue"
         android:textSize="15dp"

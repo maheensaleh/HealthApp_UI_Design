@@ -51,6 +51,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -58,6 +59,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -169,8 +173,7 @@ public class Lungs extends AppCompatActivity implements
 
 
     public void record_lung(View view) {
-
-        if (file_name_get.getText().equals("Recording name")) {
+        if (file_name_get.getText().toString().trim().equals("")) {
             Toast.makeText(Lungs.this, "Enter recording name to proceed", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(Lungs.this, "recording audio", Toast.LENGTH_SHORT).show();
@@ -182,7 +185,8 @@ public class Lungs extends AppCompatActivity implements
                 if (!file.exists()) {
                     file.mkdirs();
                 }
-                recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + file_name_get.getText()+".mp3");
+                Date ctime  = (Date) Calendar.getInstance().getTime();
+                recorder.setOutputFilePath(file.getAbsoluteFile() + "/" + file_name_get.getText()+"_"+ctime+".mp4");
                 recorder.startRecording();
                 recorder.startPlotting(graphView);
                 Brecord_heart.setEnabled(false);
@@ -248,15 +252,29 @@ public class Lungs extends AppCompatActivity implements
                 audio_ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                      String addr = "";
+                      try{
+                        addr =  address.toString();
+                      }
+                      catch (Exception e){
+                        addr = "not permitted bu user";
+                      }
 
-                        recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),address.toString());
+
+                        recorded_file for_database = new recorded_file(file_name_get.getText().toString(),uri.toString(),addr);
                         Toast.makeText(Lungs.this, "Recording saved !", Toast.LENGTH_SHORT).show();
                         String k = databaseReference.push().getKey();
                         System.out.println("key is "+k);
                         databaseReference.child(k).setValue(for_database);
                         lungsAll.child(k).setValue(for_database);
                         lungsAll_tmp.child(k).setValue(for_database);
-                        addItemToSheet(file_name_get.getText().toString(),address.toString(),mProgress);
+                        addItemToSheet(file_name_get.getText().toString(),addr,uri.toString(),mProgress);
+                        mProgress.dismiss();
+                        Intent intent = new Intent(Lungs.this,Result.class);
+                        intent.putExtra("displayname",displayname);
+
+                        startActivity(intent);
+                        finish();
 
                     }
                 });
@@ -505,24 +523,22 @@ public class Lungs extends AppCompatActivity implements
 
     //This is the part where data is transafeered from Your Android phone to Sheet by using HTTP Rest API calls
 
-    private void   addItemToSheet(String fname, String flocation,ProgressDialog progressDialog) {
+    private void   addItemToSheet(String fname, String flocation,String download_link,ProgressDialog progressDialog) {
 
         final String filename = fname ;
         final String location = flocation;
-
+        final String d_link = download_link;
 
 //        StringRequest
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbwyU20DHEU9nZ1Ek-rt_Vo09gt26YmoCVhPF809bHqoz92jLwQ/exec",
+//      https://script.google.com/macros/s/AKfycbwyU20DHEU9nZ1Ek-rt_Vo09gt26YmoCVhPF809bHqoz92jLwQ/exec
+//      https://script.google.com/macros/s/AKfycbxyMkLXFDa4QtWGuADfFc-cvG3spedR-eyQ9wPv178uSqJX0QvM/exec
+
+      String script_url = "https://script.google.com/macros/s/AKfycbx9ckYPCV13Tf86iqrsYOMjbSBCibfV_YbBD7mQrnzZkBWg7Q/exec";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, script_url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        Toast.makeText(Lungs.this,response,Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(Lungs.this,Result.class);
-                        intent.putExtra("displayname",displayname);
-
-                        startActivity(intent);
-                        finish();
 
 
                     }
@@ -539,7 +555,8 @@ public class Lungs extends AppCompatActivity implements
                 parmas.put("action","addItem");
                 parmas.put("filename",filename);
                 parmas.put("location",location);
-
+                parmas.put("download_link",d_link);
+                System.out.println("sending d link"+d_link);
                 return parmas;
             }
         };
