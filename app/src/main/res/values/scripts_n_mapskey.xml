@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="maps_api_key">AIzaSyDxGeAQYbvMsJYwyO4X72R8MUfcP29mttY</string>
+  <string name="lungs_script">https://script.google.com/macros/s/AKfycbx9ckYPCV13Tf86iqrsYOMjbSBCibfV_YbBD7mQrnzZkBWg7Q/exec</string>
+  <string name="heart_script">https://script.google.com/macros/s/AKfycbzNOMXA_Us8VEuxdz6DGX1dOAEySK-nJFDU-CZ1B0hAlppGnDRq/exec</string>
+
+</resources>
