@@ -531,7 +531,7 @@ public class Heart extends AppCompatActivity implements
 
     public  void addaudio(String uri,ProgressDialog mProgress){
 //        SimpleMultiPartRequest
-        SimpleMultiPartRequest simpleMultiPartRequest = new SimpleMultiPartRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbzNOMXA_Us8VEuxdz6DGX1dOAEySK-nJFDU-CZ1B0hAlppGnDRq/exec",
+        SimpleMultiPartRequest simpleMultiPartRequest = new SimpleMultiPartRequest(Request.Method.POST,String.valueOf(R.string.heart_script),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

@@ -533,7 +533,7 @@ public class Lungs extends AppCompatActivity implements
 //      https://script.google.com/macros/s/AKfycbwyU20DHEU9nZ1Ek-rt_Vo09gt26YmoCVhPF809bHqoz92jLwQ/exec
 //      https://script.google.com/macros/s/AKfycbxyMkLXFDa4QtWGuADfFc-cvG3spedR-eyQ9wPv178uSqJX0QvM/exec
 
-      String script_url = "https://script.google.com/macros/s/AKfycbx9ckYPCV13Tf86iqrsYOMjbSBCibfV_YbBD7mQrnzZkBWg7Q/exec";
+      String script_url = String.valueOf(R.string.lungs_script);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, script_url,
                 new Response.Listener<String>() {
